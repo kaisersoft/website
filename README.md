@@ -1,25 +1,13 @@
-# AstroLotto Score v3
+# Kaisersoft.ai – Coming Soon
 
-Experimentelles Scoring-System (Unterhaltung).
+Streamlit landing page in **CI 2 Minimal** (black + cyan neural K) with laser-show animation.
 
-## Features
-- skyfield + JPL DE421 Ephemeriden
-- 80+ Städte mit Zeitzonen
-- Kombinierter / Allgemeiner / Persönlicher Score
-- AstroWeather für Dienstag- & Samstagsziehung
-- 14-Tage Score-Verlauf
-- Gewichtete Begründungen
-- Mondphase- & Merkur-Badges
-- Profil-Historie (Session)
-- Text-Export
-- Grobe Ganz-Zeichen-Häuser (5/8/11)
-
-## Start
+## Run
 ```bash
 pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Beim ersten Start lädt skyfield `de421.bsp` (~17 MB).
-
-**Nur zur Unterhaltung – keine Gewinngarantie.**
+## Deploy (Streamlit Cloud)
+Push this folder to GitHub and connect the repo at share.streamlit.io  
+Main file: `app.py`
