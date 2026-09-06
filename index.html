@@ -23,45 +23,69 @@
     <section id="experience" aria-label="Kaisersoft.ai">
       <canvas id="fireflies"></canvas>
 
-      <a id="earth-link" class="earth-link" href="https://new-horizon-partners.lovable.app/" target="_blank" rel="noopener noreferrer" aria-label="New Horizon Partners öffnen" title="New Horizon Partners öffnen">
-        <svg class="earth" viewBox="0 0 320 260" role="img" aria-label="Erde">
+      <!-- Uranus: VoltDesk -->
+      <a id="saturn-link" class="saturn-link" href="./voltdesk-landingpage/" aria-label="VoltDesk öffnen" title="VoltDesk öffnen">
+        <svg class="saturn" viewBox="0 0 320 240" role="img" aria-label="Uranus">
           <defs>
-            <radialGradient id="earth-body" cx="34%" cy="28%" r="74%">
-              <stop offset="0" stop-color="#b9f7ff"/>
-              <stop offset=".18" stop-color="#54d7ee"/>
-              <stop offset=".46" stop-color="#147fa8"/>
-              <stop offset=".76" stop-color="#0b466c"/>
-              <stop offset="1" stop-color="#031b35"/>
+            <radialGradient id="uranus-body" cx="32%" cy="27%" r="74%">
+              <stop offset="0" stop-color="#dffcff"/><stop offset=".3" stop-color="#a8edf3"/><stop offset=".62" stop-color="#69cbd8"/><stop offset=".86" stop-color="#3c91a4"/><stop offset="1" stop-color="#1d5365"/>
+            </radialGradient>
+            <linearGradient id="uranus-band" x1="0" x2="1"><stop offset="0" stop-color="#67c6d3"/><stop offset=".5" stop-color="#c2f6f8"/><stop offset="1" stop-color="#4b9fac"/></linearGradient>
+            <filter id="uranus-glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <clipPath id="uranus-clip"><circle cx="160" cy="120" r="57"/></clipPath>
+          </defs>
+          <g class="uranus-system">
+            <g class="uranus-rings">
+              <ellipse cx="160" cy="120" rx="118" ry="25" fill="none" stroke="rgba(154,225,232,.34)" stroke-width="4" transform="rotate(74 160 120)" filter="url(#uranus-glow)"/>
+              <ellipse cx="160" cy="120" rx="103" ry="18" fill="none" stroke="rgba(190,244,247,.5)" stroke-width="2" transform="rotate(74 160 120)"/>
+              <ellipse cx="160" cy="120" rx="86" ry="12" fill="none" stroke="rgba(65,139,151,.7)" stroke-width="3" transform="rotate(74 160 120)"/>
+            </g>
+            <g class="uranus-globe">
+              <circle cx="160" cy="120" r="57" fill="url(#uranus-body)"/>
+              <g clip-path="url(#uranus-clip)" opacity=".58">
+                <g class="uranus-surface">
+                  <path d="M76 88 Q160 99 244 88" fill="none" stroke="#d9fbfd" stroke-width="4"/>
+                  <path d="M76 102 Q160 113 244 102" fill="none" stroke="url(#uranus-band)" stroke-width="5"/>
+                  <path d="M76 117 Q160 128 244 117" fill="none" stroke="#8de1e8" stroke-width="3"/>
+                  <path d="M76 132 Q160 143 244 132" fill="none" stroke="#4faab8" stroke-width="4"/>
+                  <path d="M76 147 Q160 158 244 147" fill="none" stroke="#b7eff3" stroke-width="3"/>
+                  <path d="M125 64 Q142 91 138 120 Q134 149 151 176" fill="none" stroke="rgba(35,105,120,.3)" stroke-width="5"/>
+                  <path d="M176 64 Q158 92 162 120 Q166 148 150 176" fill="none" stroke="rgba(235,255,255,.22)" stroke-width="4"/>
+                </g>
+              </g>
+              <ellipse class="uranus-highlight" cx="139" cy="96" rx="19" ry="11" fill="rgba(255,255,255,.18)"/>
+            </g>
+          </g>
+        </svg>
+      </a>
+
+      <!-- Earth: New Horizon Partners -->
+      <a id="earth-link" class="earth-link" href="https://new-horizon-partners.lovable.app/" target="_blank" rel="noopener noreferrer" aria-label="New Horizon Partners öffnen" title="New Horizon Partners öffnen">
+        <svg class="earth" viewBox="0 0 220 220" role="img" aria-label="Erde">
+          <defs>
+            <radialGradient id="earth-body" cx="32%" cy="27%" r="74%">
+              <stop offset="0" stop-color="#c9fbff"/><stop offset=".2" stop-color="#55d8ed"/><stop offset=".48" stop-color="#147ea6"/><stop offset=".78" stop-color="#0a4267"/><stop offset="1" stop-color="#02172d"/>
             </radialGradient>
             <radialGradient id="earth-atmosphere" cx="50%" cy="50%" r="50%">
-              <stop offset="72%" stop-color="#42dfff" stop-opacity="0"/>
-              <stop offset="91%" stop-color="#42dfff" stop-opacity=".18"/>
-              <stop offset="100%" stop-color="#42dfff" stop-opacity=".7"/>
+              <stop offset="76%" stop-color="#42dfff" stop-opacity="0"/><stop offset="92%" stop-color="#42dfff" stop-opacity=".18"/><stop offset="100%" stop-color="#42dfff" stop-opacity=".7"/>
             </radialGradient>
             <linearGradient id="earth-land" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#d7f7c2"/>
-              <stop offset=".45" stop-color="#6fbf78"/>
-              <stop offset="1" stop-color="#1f684c"/>
+              <stop offset="0" stop-color="#d7f7c2"/><stop offset=".45" stop-color="#6fbf78"/><stop offset="1" stop-color="#1f684c"/>
             </linearGradient>
-            <filter id="earth-glow" x="-70%" y="-70%" width="240%" height="240%">
-              <feGaussianBlur stdDeviation="7" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <clipPath id="earth-clip"><circle cx="160" cy="130" r="78"/></clipPath>
+            <filter id="earth-glow" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <clipPath id="earth-clip"><circle cx="110" cy="110" r="61"/></clipPath>
           </defs>
-
-          <circle cx="160" cy="130" r="91" fill="url(#earth-atmosphere)" filter="url(#earth-glow)"/>
-          <circle cx="160" cy="130" r="78" fill="url(#earth-body)"/>
+          <circle cx="110" cy="110" r="72" fill="url(#earth-atmosphere)" filter="url(#earth-glow)"/>
+          <circle cx="110" cy="110" r="61" fill="url(#earth-body)"/>
           <g clip-path="url(#earth-clip)" opacity=".9">
-            <path d="M111 79 C91 91 92 108 106 114 C115 118 117 129 111 139 C105 150 112 161 126 160 C139 159 146 150 153 141 C159 132 151 124 142 119 C134 114 137 104 130 97 C124 91 119 84 111 79Z" fill="url(#earth-land)"/>
-            <path d="M171 72 C181 78 194 78 202 86 C210 94 207 103 217 109 C228 116 223 125 214 129 C204 134 199 143 191 150 C184 157 181 168 170 172 C162 175 154 166 158 157 C162 148 158 140 164 133 C171 125 166 118 158 112 C150 106 152 96 160 91 C166 87 166 78 171 72Z" fill="url(#earth-land)"/>
-            <path d="M207 151 C217 147 230 149 236 157 C242 166 234 175 224 174 C215 173 208 166 207 151Z" fill="url(#earth-land)"/>
-            <path d="M133 168 C143 165 151 169 153 178 C155 188 147 194 137 191 C129 188 126 177 133 168Z" fill="url(#earth-land)"/>
-            <path d="M73 118 Q160 94 247 117" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="8"/>
-            <path d="M76 145 Q160 166 244 143" fill="none" stroke="rgba(0,210,255,.18)" stroke-width="6"/>
+            <path d="M74 70 C61 79 62 92 72 97 C80 101 81 110 76 119 C71 129 78 137 88 136 C99 135 105 128 111 120 C116 113 110 106 103 102 C97 98 99 89 94 83 C89 78 81 73 74 70Z" fill="url(#earth-land)"/>
+            <path d="M118 65 C127 70 137 70 143 77 C150 84 147 92 155 97 C163 102 160 110 153 113 C145 117 141 124 135 130 C129 136 127 145 119 148 C112 151 106 143 109 136 C112 129 109 123 114 117 C120 110 116 104 110 100 C104 95 106 87 112 83 C117 80 114 71 118 65Z" fill="url(#earth-land)"/>
+            <path d="M145 129 C153 126 162 128 166 134 C171 141 165 148 158 148 C151 147 146 142 145 129Z" fill="url(#earth-land)"/>
+            <path d="M90 139 C98 137 104 140 105 147 C106 155 100 160 93 158 C86 156 84 146 90 139Z" fill="url(#earth-land)"/>
+            <path d="M45 101 Q110 82 176 100" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="6"/>
+            <path d="M48 123 Q110 140 173 122" fill="none" stroke="rgba(0,210,255,.16)" stroke-width="5"/>
           </g>
-          <ellipse cx="139" cy="100" rx="29" ry="18" fill="rgba(255,255,255,.16)"/>
-          <path d="M96 177 Q160 213 224 177" fill="none" stroke="rgba(120,235,255,.36)" stroke-width="2" filter="url(#earth-glow)"/>
+          <ellipse cx="93" cy="87" rx="21" ry="13" fill="rgba(255,255,255,.16)"/>
         </svg>
       </a>
 
