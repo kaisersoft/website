@@ -34,27 +34,28 @@
             <clipPath id="uranus-clip"><circle cx="160" cy="120" r="57"/></clipPath>
           </defs>
 
-          <!-- Uranus rings are fixed in space. Only the globe rotates around its own vertical axis. -->
-          <g class="uranus-rings">
-            <ellipse cx="160" cy="120" rx="118" ry="25" fill="none" stroke="rgba(154,225,232,.34)" stroke-width="4" transform="rotate(74 160 120)" filter="url(#uranus-glow)"/>
-            <ellipse cx="160" cy="120" rx="103" ry="18" fill="none" stroke="rgba(190,244,247,.5)" stroke-width="2" transform="rotate(74 160 120)"/>
-            <ellipse cx="160" cy="120" rx="86" ry="12" fill="none" stroke="rgba(65,139,151,.7)" stroke-width="3" transform="rotate(74 160 120)"/>
-          </g>
-
-          <g class="uranus-globe">
-            <circle cx="160" cy="120" r="57" fill="url(#uranus-body)"/>
-            <g clip-path="url(#uranus-clip)" opacity=".58">
-              <g class="uranus-surface">
-                <path d="M76 88 Q160 99 244 88" fill="none" stroke="#d9fbfd" stroke-width="4"/>
-                <path d="M76 102 Q160 113 244 102" fill="none" stroke="url(#uranus-band)" stroke-width="5"/>
-                <path d="M76 117 Q160 128 244 117" fill="none" stroke="#8de1e8" stroke-width="3"/>
-                <path d="M76 132 Q160 143 244 132" fill="none" stroke="#4faab8" stroke-width="4"/>
-                <path d="M76 147 Q160 158 244 147" fill="none" stroke="#b7eff3" stroke-width="3"/>
-                <path d="M125 64 Q142 91 138 120 Q134 149 151 176" fill="none" stroke="rgba(35,105,120,.3)" stroke-width="5"/>
-                <path d="M176 64 Q158 92 162 120 Q166 148 150 176" fill="none" stroke="rgba(235,255,255,.22)" stroke-width="4"/>
-              </g>
+          <g class="uranus-system">
+            <g class="uranus-rings">
+              <ellipse cx="160" cy="120" rx="118" ry="25" fill="none" stroke="rgba(154,225,232,.34)" stroke-width="4" transform="rotate(74 160 120)" filter="url(#uranus-glow)"/>
+              <ellipse cx="160" cy="120" rx="103" ry="18" fill="none" stroke="rgba(190,244,247,.5)" stroke-width="2" transform="rotate(74 160 120)"/>
+              <ellipse cx="160" cy="120" rx="86" ry="12" fill="none" stroke="rgba(65,139,151,.7)" stroke-width="3" transform="rotate(74 160 120)"/>
             </g>
-            <ellipse class="uranus-highlight" cx="139" cy="96" rx="19" ry="11" fill="rgba(255,255,255,.18)"/>
+
+            <g class="uranus-globe">
+              <circle cx="160" cy="120" r="57" fill="url(#uranus-body)"/>
+              <g clip-path="url(#uranus-clip)" opacity=".58">
+                <g class="uranus-surface">
+                  <path d="M76 88 Q160 99 244 88" fill="none" stroke="#d9fbfd" stroke-width="4"/>
+                  <path d="M76 102 Q160 113 244 102" fill="none" stroke="url(#uranus-band)" stroke-width="5"/>
+                  <path d="M76 117 Q160 128 244 117" fill="none" stroke="#8de1e8" stroke-width="3"/>
+                  <path d="M76 132 Q160 143 244 132" fill="none" stroke="#4faab8" stroke-width="4"/>
+                  <path d="M76 147 Q160 158 244 147" fill="none" stroke="#b7eff3" stroke-width="3"/>
+                  <path d="M125 64 Q142 91 138 120 Q134 149 151 176" fill="none" stroke="rgba(35,105,120,.3)" stroke-width="5"/>
+                  <path d="M176 64 Q158 92 162 120 Q166 148 150 176" fill="none" stroke="rgba(235,255,255,.22)" stroke-width="4"/>
+                </g>
+              </g>
+              <ellipse class="uranus-highlight" cx="139" cy="96" rx="19" ry="11" fill="rgba(255,255,255,.18)"/>
+            </g>
           </g>
         </svg>
       </a>
