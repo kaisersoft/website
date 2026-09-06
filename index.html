@@ -51,20 +51,35 @@
             <clipPath id="saturn-clip"><circle cx="160" cy="120" r="57"/></clipPath>
           </defs>
 
-          <!-- Rings remain in place while the surface texture moves, creating a subtle axial spin. -->
+          <!-- Fixed rings; the surface texture scrolls horizontally to simulate axial rotation. -->
           <g class="saturn-rings">
             <ellipse cx="160" cy="122" rx="125" ry="31" fill="none" stroke="rgba(224,201,163,.7)" stroke-width="13" transform="rotate(-12 160 122)" filter="url(#saturn-glow)"/>
             <ellipse cx="160" cy="120" rx="112" ry="27" fill="none" stroke="#59452f" stroke-width="6" transform="rotate(-12 160 120)"/>
           </g>
 
           <circle cx="160" cy="120" r="57" fill="url(#saturn-body)"/>
-          <g clip-path="url(#saturn-clip)" opacity=".8">
+          <g clip-path="url(#saturn-clip)" opacity=".82">
             <g class="saturn-texture">
-              <path d="M65 91 Q160 103 255 91" fill="none" stroke="#f0d8aa" stroke-width="8"/>
-              <path d="M65 103 Q160 115 255 103" fill="none" stroke="url(#saturn-band)" stroke-width="6"/>
-              <path d="M65 116 Q160 128 255 116" fill="none" stroke="#c3a578" stroke-width="9"/>
-              <path d="M65 130 Q160 142 255 130" fill="none" stroke="#765b40" stroke-width="7"/>
-              <path d="M65 143 Q160 155 255 143" fill="none" stroke="#d4b987" stroke-width="6"/>
+              <g class="saturn-texture-copy">
+                <path d="M35 91 Q130 103 225 91" fill="none" stroke="#f0d8aa" stroke-width="8"/>
+                <path d="M35 103 Q130 115 225 103" fill="none" stroke="url(#saturn-band)" stroke-width="6"/>
+                <path d="M35 116 Q130 128 225 116" fill="none" stroke="#c3a578" stroke-width="9"/>
+                <path d="M35 130 Q130 142 225 130" fill="none" stroke="#765b40" stroke-width="7"/>
+                <path d="M35 143 Q130 155 225 143" fill="none" stroke="#d4b987" stroke-width="6"/>
+                <path d="M128 62 Q145 92 140 120 Q136 149 151 178" fill="none" stroke="rgba(91,65,42,.28)" stroke-width="5"/>
+                <path d="M173 62 Q156 91 161 120 Q166 149 151 178" fill="none" stroke="rgba(255,238,202,.22)" stroke-width="4"/>
+                <ellipse cx="132" cy="126" rx="9" ry="5" fill="rgba(77,53,34,.25)"/>
+              </g>
+              <g class="saturn-texture-copy" transform="translate(190 0)">
+                <path d="M35 91 Q130 103 225 91" fill="none" stroke="#f0d8aa" stroke-width="8"/>
+                <path d="M35 103 Q130 115 225 103" fill="none" stroke="url(#saturn-band)" stroke-width="6"/>
+                <path d="M35 116 Q130 128 225 116" fill="none" stroke="#c3a578" stroke-width="9"/>
+                <path d="M35 130 Q130 142 225 130" fill="none" stroke="#765b40" stroke-width="7"/>
+                <path d="M35 143 Q130 155 225 143" fill="none" stroke="#d4b987" stroke-width="6"/>
+                <path d="M128 62 Q145 92 140 120 Q136 149 151 178" fill="none" stroke="rgba(91,65,42,.28)" stroke-width="5"/>
+                <path d="M173 62 Q156 91 161 120 Q166 149 151 178" fill="none" stroke="rgba(255,238,202,.22)" stroke-width="4"/>
+                <ellipse cx="132" cy="126" rx="9" ry="5" fill="rgba(77,53,34,.25)"/>
+              </g>
             </g>
             <ellipse class="saturn-highlight" cx="139" cy="97" rx="20" ry="12" fill="rgba(255,245,220,.18)"/>
           </g>
