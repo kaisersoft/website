@@ -7,6 +7,7 @@ on:
       - 'index.html'
       - 'css/**'
       - 'js/**'
+      - 'voltdesk-landingpage/**'
       - '.github/workflows/deploy-voltdesk-landingpage.yml'
   workflow_dispatch:
 
@@ -38,6 +39,7 @@ jobs:
           cp index.html _site/
           cp -R css _site/
           cp -R js _site/
+          cp -R voltdesk-landingpage _site/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
