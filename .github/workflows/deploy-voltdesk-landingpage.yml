@@ -1,10 +1,12 @@
-name: Deploy VoltDesk Landing Page
+name: Deploy Kaisersoft Website
 
 on:
   push:
     branches: [main]
     paths:
-      - 'voltdesk-landingpage/**'
+      - 'index.html'
+      - 'css/**'
+      - 'js/**'
       - '.github/workflows/deploy-voltdesk-landingpage.yml'
   workflow_dispatch:
 
@@ -33,7 +35,9 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p _site
-          cp -R voltdesk-landingpage/. _site/
+          cp index.html _site/
+          cp -R css _site/
+          cp -R js _site/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
