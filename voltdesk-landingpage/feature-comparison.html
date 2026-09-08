@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoltDesk Pro – Immer am Puls</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#05070c; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:'Inter',system-ui,-apple-system,sans-serif; padding:20px; }
+  .card { max-width:900px; width:100%; background:radial-gradient(ellipse at 50% 20%,#0d1b2b,#05070c 80%); border:1px solid rgba(0,229,255,.25); border-radius:32px; padding:40px 40px 30px; box-shadow:0 20px 80px rgba(0,229,255,.08),inset 0 0 80px rgba(0,229,255,.03); position:relative; overflow:hidden; }
+  .card::before { content:''; position:absolute; top:-40%; left:-20%; width:60%; height:80%; background:radial-gradient(circle,rgba(0,229,255,.06) 0%,transparent 70%); pointer-events:none; }
+  .badge { display:inline-block; background:linear-gradient(135deg,#00e5ff,#0088cc); color:#05070c; font-weight:700; font-size:.7rem; letter-spacing:.12em; padding:4px 14px; border-radius:20px; text-transform:uppercase; margin-bottom:12px; }
+  .header { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:24px; position:relative; z-index:1; }
+  .header h1 { font-size:2.2rem; font-weight:800; color:#fff; letter-spacing:-.02em; line-height:1.1; }
+  .header h1 span { color:#00e5ff; text-shadow:0 0 20px rgba(0,229,255,.3); }
+  .header .sub { color:#94a3b8; font-size:1rem; margin-top:4px; font-weight:400; }
+  .price-tag { background:rgba(0,229,255,.08); border:1px solid rgba(0,229,255,.3); border-radius:16px; padding:10px 22px; text-align:center; flex-shrink:0; }
+  .price-tag .amount { font-size:1.8rem; font-weight:700; color:#fff; }
+  .price-tag .amount small { font-size:1rem; font-weight:400; color:#94a3b8; }
+  .price-tag .note { font-size:.7rem; color:#64748b; margin-top:2px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:30px 0; position:relative; z-index:1; }
+  .feature { background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:18px 20px; display:flex; align-items:flex-start; gap:14px; transition:border-color .2s; }
+  .feature:hover { border-color:rgba(0,229,255,.25); }
+  .feature .icon { font-size:1.6rem; flex-shrink:0; width:40px; text-align:center; margin-top:2px; }
+  .feature .content h3 { color:#e8eef7; font-size:1rem; font-weight:600; margin-bottom:2px; }
+  .feature .content p { color:#94a3b8; font-size:.85rem; line-height:1.4; }
+  .feature .content .tag { display:inline-block; background:rgba(0,229,255,.12); color:#00e5ff; font-size:.6rem; font-weight:600; padding:2px 10px; border-radius:12px; margin-top:4px; letter-spacing:.04em; }
+  .highlight-telegram { grid-column:1/-1; background:linear-gradient(135deg,rgba(0,229,255,.06),rgba(0,136,204,.04)); border:1px solid rgba(0,229,255,.2); border-radius:20px; padding:22px 24px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; justify-content:space-between; }
+  .highlight-telegram .left { display:flex; align-items:center; gap:16px; }
+  .highlight-telegram .left .icon-big { font-size:2.6rem; }
+  .highlight-telegram .left .text h2 { color:#fff; font-size:1.2rem; font-weight:700; }
+  .highlight-telegram .left .text p { color:#94a3b8; font-size:.9rem; }
+  .highlight-telegram .pill { background:#00e5ff; color:#05070c; font-weight:700; font-size:.75rem; padding:8px 20px; border-radius:40px; letter-spacing:.04em; white-space:nowrap; box-shadow:0 0 30px rgba(0,229,255,.15); }
+  .footer { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,.05); position:relative; z-index:1; }
+  .footer .disclaimer { font-size:.7rem; color:#475569; }
+  .footer .cta { background:transparent; border:1px solid #00e5ff; color:#00e5ff; padding:8px 28px; border-radius:40px; font-weight:600; font-size:.9rem; text-decoration:none; transition:all .2s; }
+  .footer .cta:hover { background:#00e5ff; color:#05070c; box-shadow:0 0 30px rgba(0,229,255,.2); }
+  @media (max-width:640px) { .card{padding:24px 16px;} .header h1{font-size:1.6rem;} .grid{grid-template-columns:1fr;} .highlight-telegram{flex-direction:column;align-items:flex-start;} .highlight-telegram .left{flex-wrap:wrap;} .price-tag{width:100%;} .footer{flex-direction:column;align-items:stretch;text-align:center;} }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="badge">🔥 Exklusiv für Abonnenten</div>
+  <div class="header">
+    <div><h1>VoltDesk <span>Pro</span></h1><div class="sub">Immer am Puls des Marktes – <strong>in Echtzeit</strong></div></div>
+    <div class="price-tag"><div class="amount">7 <small>€ / Monat</small></div><div class="note">oder 70 € / Jahr (2 Monate gratis)</div></div>
+  </div>
+  <div class="highlight-telegram">
+    <div class="left"><div class="icon-big">📲</div><div class="text"><h2>Telegram Push-Alarme</h2><p><strong>Stop, Take, KO, Kill-Switch, Daily-Loss-Limit</strong> – alle kritischen Ereignisse <strong>sofort</strong> auf dein Handy.</p></div></div>
+    <div class="pill">⚡ Echtzeit</div>
+  </div>
+  <div class="grid">
+    <div class="feature"><div class="icon">💰</div><div class="content"><h3>Freie Kapitalwahl</h3><p>Startkapital manuell einstellbar – simuliere mit deinem realen Depot.</p><span class="tag">Flexibel</span></div></div>
+    <div class="feature"><div class="icon">📊</div><div class="content"><h3>Backtest &amp; Walk-Forward</h3><p>Historische Simulation &amp; Parameter-Optimierung auf Yahoo-Daten.</p><span class="tag">Analytics</span></div></div>
+    <div class="feature"><div class="icon">🔓</div><div class="content"><h3>Keine Handelslimits</h3><p>Unbegrenzte Trades pro Tag, kein Cooldown, bis 60 % Tagesrisiko.</p><span class="tag">Freiheit</span></div></div>
+    <div class="feature"><div class="icon">📰</div><div class="content"><h3>Alle News-Quellen</h3><p>Yahoo, Finnhub, finanzen.net, Onvista, Aktionär, Ad-hoc – frei wählbar.</p><span class="tag">Informiert</span></div></div>
+    <div class="feature"><div class="icon">📈</div><div class="content"><h3>Hebel bis 8x</h3><p>Maximaler Hebel für gehebelte Produkte – für erfahrene Trader.</p><span class="tag">Power</span></div></div>
+    <div class="feature"><div class="icon">🛠️</div><div class="content"><h3>Freie Ticker-Eingabe</h3><p>Jedes beliebige Symbol – auch außerhalb des kuratierten Katalogs.</p><span class="tag">Flexibel</span></div></div>
+  </div>
+  <div class="footer"><div class="disclaimer">⚡ Paper-Trading – keine Anlageberatung. Alle Daten simuliert / verzögert.</div><a href="https://kaisersoft.github.io/website/voltdesk-landingpage/#pricing" class="cta" target="_blank">Jetzt Pro starten →</a></div>
+</div>
+</body>
+</html>
