@@ -2,7 +2,7 @@
 # VOLTDESK_PROFIT_MACRO_INSIDER_PATCH_V1
 # ==============================================================================
 # app.py – VoltDesk Paper-Trading Desk
-# Version 0.9.34 – Event-Uhr cleanup, Makro-Deduplizierung, Refresh 60s
+# Version 0.9.35 – Bestands-UX, Handelszeit-Alerts, Event-Quellen im Einstellungsdialog
 # ==============================================================================
 
 import math
@@ -229,6 +229,7 @@ def log_critical_trade_event(
         )
         return
     try:
+        created_at = datetime.now(TZ_BERLIN).isoformat()
         with get_db_connection() as conn:
             c = conn.cursor()
             c.execute(
@@ -236,10 +237,17 @@ def log_critical_trade_event(
                 "(user_id, event_type, ticker, side, details_json, requires_broker_action, created_at) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?)",
                 (user_id, event_type, ticker, side, json.dumps(details),
-                 1 if requires_broker_action else 0, datetime.now(TZ_BERLIN).isoformat()),
+                 1 if requires_broker_action else 0, created_at),
             )
+        return True
     except Exception as e:
+        fallback = st.session_state.setdefault("critical_event_fallback", [])
+        fallback.append({"id": f"session-{uuid.uuid4().hex}", "event_type": event_type,
+                         "ticker": ticker, "side": side, "details": details,
+                         "requires_broker_action": bool(requires_broker_action),
+                         "created_at": datetime.now(TZ_BERLIN).isoformat()})
         log_error("critical_trade_event", f"{event_type} {ticker}: {e}", user_id=user_id)
+        return False
 
 
 def get_pending_critical_events() -> list:
@@ -256,11 +264,10 @@ def get_pending_critical_events() -> list:
                 (user_id,),
             ).fetchall()
     except Exception as e:
-        # Statt stiller Leerliste: nicht lesbare KRITISCHE Events duerfen nicht
-        # unter den Tisch fallen - ins error_log, UI bleibt vorsichtshalber leer.
+        # Bei DB-Lesefehler niemals vorhandene Session-Fallback-Events verstecken.
         log_error("get_pending_critical_events", str(e))
-        return []
-    return [
+        return list(st.session_state.get("critical_event_fallback") or [])
+    events = [
         {
             "id": r[0], "event_type": r[1], "ticker": r[2], "side": r[3],
             "details": json.loads(r[4]), "requires_broker_action": bool(r[5]),
@@ -268,11 +275,16 @@ def get_pending_critical_events() -> list:
         }
         for r in rows
     ]
+    events.extend(list(st.session_state.get("critical_event_fallback") or []))
+    return events
 
 
 def acknowledge_critical_events(ids: list) -> None:
+    ids = set(ids or [])
     if not ids:
         return
+    fallback = st.session_state.get("critical_event_fallback") or []
+    st.session_state["critical_event_fallback"] = [ev for ev in fallback if ev.get("id") not in ids]
     user_id = current_user_id()
     if not user_id:
         return
@@ -1159,7 +1171,7 @@ def _logo_data_uri(pro_mode: bool) -> str:
     return "data:image/png;base64," + base64.b64encode(raw).decode("ascii")
 
 
-VERSION = "0.9.33"
+VERSION = "0.9.35"
 def _turso_credentials() -> tuple[Optional[str], Optional[str]]:
     """Turso-URL und DB-Token aus Streamlit Secrets (nicht loggen) — namensunabhängig.
 
@@ -1234,7 +1246,7 @@ def _read_sql(sql: str, params=()) -> pd.DataFrame:
 # aktualisiert (Datum/Uhrzeit des letzten Entwicklungsstands, Europe/Berlin).
 # Vorher berechnete get_build() datetime.now() bei JEDEM Seitenaufruf live - das zeigte
 # also nie "wann zuletzt entwickelt", sondern immer nur die aktuelle Serverzeit an.
-BUILD_TIMESTAMP = "2026-09-09 13:45"
+BUILD_TIMESTAMP = "2026-09-09 14:15"
 def get_build() -> str:
     return BUILD_TIMESTAMP
 FEE_PER_TRADE = 1.0  # € je Kauf oder Verkauf
@@ -5001,9 +5013,22 @@ def check_earnings_alerts(ticker: str, events: dict):
         pass
 
 
-def check_setup_alerts(ticker: str, rec: dict):
-    """Setup-Alert bei klarer Kauf-Empfehlung mit hoher Konfidenz (>=75%)."""
+def check_setup_alerts(ticker: str, rec: dict, venue: str = "US Regular"):
+    """Setup-Alert bei klarer Kauf-Empfehlung mit hoher Konfidenz (>=75%).
+
+    Die Empfehlung darf auch in PRE/CLOSE berechnet werden, aber die reine
+    Setup-Erkannt-Meldung ist außerhalb der tatsächlichen Handelszeit eines
+    Titels überflüssig und wird deshalb unterdrückt.
+    """
     if not rec or not ticker:
+        return
+    now = datetime.now(TZ_BERLIN)
+    if now.weekday() >= 5 or is_market_holiday(venue, now.date()):
+        return
+    windows = session_windows(venue)
+    t = now.time()
+    in_session = any(start <= t < end for start, end in (windows["open"], windows["mid"], windows["close"]))
+    if not in_session:
         return
     if str(rec.get("action", "")).upper() == "BUY" and float(rec.get("confidence", 0) or 0) >= 75:
         side = rec.get("side", "LONG")
@@ -5214,7 +5239,7 @@ def manage_position(pos: dict, rec: dict, levels: dict, mode: str, close_subphas
             "action": "REDUCE",
             "label": (
                 f"{ticker}: REDUCE — Minus {pnl:+.2f} € ohne Bestätigung. "
-                f"Ca. 50 % reduzieren (Last {_px(last)}, Stop {_px(stop)})."
+                f"Reduzieren der Position prüfen (Last {_px(last)}, Stop {_px(stop)})."
             ),
             "trail": stop,
             "reason_code": "reduce_unconfirmed",
@@ -5550,6 +5575,29 @@ def estimate_stop_risk_eur(amount: float, price: Optional[float], stop: Optional
         return max(amt, 0.0)
     dist = abs(px - stp) / px
     return amt * lev * dist
+
+
+def position_risk_snapshot(pos: dict, reference_price: Optional[float] = None) -> dict:
+    """Centraler Risk-Snapshot für eine offene Position.
+
+    planned_risk = Verlust bis zum aktuellen Paper-Stop nach dem VoltDesk-Modell.
+    ko_risk = modellierter Verlust bis zur KO-Schwelle, sofern bekannt.
+    gap_risk bleibt bewusst None, solange kein tatsächlich beobachtetes Session-Gap
+    vorliegt; ein frei erfundener Stress-Gap würde dem Nutzer Scheingenauigkeit geben.
+    """
+    amount = _as_float(pos.get("amount"), 0.0) or 0.0
+    entry = _as_float(pos.get("entry"), reference_price)
+    stop = _as_float(pos.get("stop"))
+    ko = _as_float(pos.get("ko"))
+    lev = _as_float(pos.get("leverage"), 1.0) or 1.0
+    out = {"planned_risk_eur": None, "ko_risk_eur": None, "gap_risk_eur": None}
+    if amount <= 0 or not entry or entry <= 0 or lev <= 0:
+        return out
+    if stop and stop > 0:
+        out["planned_risk_eur"] = estimate_stop_risk_eur(amount, entry, stop, lev)
+    if ko and ko > 0:
+        out["ko_risk_eur"] = estimate_stop_risk_eur(amount, entry, ko, lev)
+    return out
 
 
 def position_stop_risk_eur(pos: dict) -> float:
@@ -5927,6 +5975,37 @@ def _post_entry_extrema(pos: dict, fallback_last: float):
         return fallback_last, fallback_last
 
 
+@st.cache_data(ttl=30, show_spinner=False)
+def fetch_paper_mark(yf_symbol: str) -> dict:
+    """Best-effort intraday mark for risk/execution simulation.
+
+    Die bisherige Watchlist-Kursquelle basiert auf Daily-History und kann intraday
+    naturgemäß veraltet sein. Für offene Positionen verwenden wir deshalb bevorzugt
+    die letzte 5-Minuten-Candle und geben Alter/Quelle explizit zurück.
+    """
+    now = datetime.now(timezone.utc)
+    try:
+        intra = _fetch_intraday_raw(yf_symbol)
+        if intra is not None and not intra.empty and "Close" in intra:
+            ts = intra.index[-1]
+            ts = pd.Timestamp(ts)
+            if ts.tzinfo is None:
+                ts = ts.tz_localize(timezone.utc)
+            else:
+                ts = ts.tz_convert(timezone.utc)
+            px = float(intra["Close"].iloc[-1])
+            age = max(0.0, (now - ts.to_pydatetime()).total_seconds())
+            quality = "intraday" if age <= 15 * 60 else "stale-intraday"
+            if px > 0:
+                return {"price": px, "timestamp": ts.to_pydatetime(),
+                        "age_seconds": age, "source": "yfinance-5m", "quality": quality}
+    except Exception:
+        pass
+    q = fetch_quote(yf_symbol) or {}
+    return {"price": q.get("price"), "timestamp": None, "age_seconds": None,
+            "source": "fallback-daily", "quality": "delayed"}
+
+
 def mark_positions(watch: pd.DataFrame) -> float:
     px = (
         {r["Ticker"]: (r["Kurs"], r.get("High"), r.get("Low")) for _, r in watch.iterrows()}
@@ -5935,13 +6014,25 @@ def mark_positions(watch: pd.DataFrame) -> float:
     )
     open_pnl = 0.0
     for pos in st.session_state.positions:
-        row = px.get(pos["ticker"])
-        last, _day_high, _day_low = row if row else (None, None, None)
+        meta = find_meta(pos.get("ticker")) if pos.get("ticker") else None
+        symbol = meta.get("yf") if meta else None
+        mark = fetch_paper_mark(symbol) if symbol else {}
+        last = mark.get("price")
+        _day_high = _day_low = None
         if last is None:
-            q = fetch_quote(find_meta(pos["ticker"])["yf"]) if find_meta(pos["ticker"]) else {}
-            last = q.get("price")
+            row = px.get(pos["ticker"])
+            last, _day_high, _day_low = row if row else (None, None, None)
         if last is None:
             continue
+        # Kritische Positionsbewertung bevorzugt Intraday-Daten. Wenn nur Daily-Fallback
+        # verfügbar ist, niemals behaupten, der Mark sei aktuell. Die Position bleibt
+        # im Paper-Depot bestehen; ein Close/Stop darf nicht aus einem veralteten Preis
+        # als "live" abgeleitet werden.
+        pos["mark_source"] = mark.get("source")
+        pos["mark_age_seconds"] = mark.get("age_seconds")
+        pos["mark_timestamp"] = mark.get("timestamp").isoformat() if mark.get("timestamp") else None
+        pos["mark_quality"] = mark.get("quality")
+        pos["stale_for_execution"] = mark.get("quality") != "intraday"
         # IMPORTANT: watchlist High/Low are full-day values and can predate entry.
         # Gap-stop detection must only consider intraday bars at/after entry.
         day_high, day_low = _post_entry_extrema(pos, float(last))
@@ -5962,7 +6053,7 @@ def mark_positions(watch: pd.DataFrame) -> float:
         stop = _as_float(pos.get("stop"))
         ko = _as_float(pos.get("ko"))
         spread_pct = _as_float(pos.get("spread_pct"), 0.0) or 0.0
-        gap_open = _session_gap_open(pos, float(last))
+        gap_open = _session_gap_open(pos, float(last)) if not pos.get("stale_for_execution") else None
 
         knocked = False
         if ko is not None:
@@ -6030,12 +6121,12 @@ def mark_positions(watch: pd.DataFrame) -> float:
                 else:
                     pos["pnl"] = (pos["last"] - pos["entry"]) * direction * pos["shares"]
 
-        hit = knocked or taken or gap_open_hit or gapped or (
+        hit = False if pos.get("stale_for_execution") else (knocked or taken or gap_open_hit or gapped or (
             stop is not None and (
                 (pos["side"] == "LONG" and float(pos["last"]) <= stop)
                 or (pos["side"] == "SHORT" and float(pos["last"]) >= stop)
             )
-        )
+        ))
         pos["stopped"] = hit
         pos["gapped"] = gapped
         pos["gap_open_hit"] = gap_open_hit
@@ -6466,6 +6557,12 @@ def execute_paper_buy(ticker, side, last_px, stop, amount, leverage, typ, wkn, r
         )
     # Entry-Fill: Half-Spread + Slippage gegen den Trader, bevor Risiko gerechnet wird.
     last_px = apply_adverse_slippage(float(last_px), side, is_entry=True, spread_pct=spread_pct)
+    # Stop must remain on the loss side of the actual paper fill. This catches
+    # stale/UI-calculated stops that become invalid after adverse entry slippage.
+    if side == "LONG" and float(stop) >= last_px:
+        return False, "Ticket abgelehnt: LONG-Stop liegt nicht unter dem tatsächlichen Entry-Fill."
+    if side == "SHORT" and float(stop) <= last_px:
+        return False, "Ticket abgelehnt: SHORT-Stop liegt nicht über dem tatsächlichen Entry-Fill."
 
     pro_mode = effective_pro_mode()
 
@@ -6593,6 +6690,17 @@ def execute_paper_buy(ticker, side, last_px, stop, amount, leverage, typ, wkn, r
                     stop = float(parent_stop)
                 est_loss_eur = estimate_stop_risk_eur(amount, last_px, stop, leverage)
 
+        # Re-check after Scale-in stop normalization: the inherited parent stop can
+        # materially change the € risk and must not bypass the hard risk caps above.
+        if not pro_mode:
+            risk_pct = float(st.session_state.get("daily_risk_pct", 2.0))
+            risk_cap = current_capital() * risk_pct / 100.0
+            risk_used = float(st.session_state.get("risk_used_today_eur", 0.0))
+            if risk_used + est_loss_eur > risk_cap + 1e-6:
+                return False, f"Tages-Risiko-Limit nach Scale-in-Stop-Prüfung überschritten: {est_loss_eur:.0f} € Risiko."
+        if est_loss_eur > float(st.session_state.get("max_loss_per_trade_eur", 150.0)) + 1e-6:
+            return False, f"Max. Verlust pro Trade nach Scale-in-Stop-Prüfung überschritten: {est_loss_eur:.0f} €."
+
     if amount + FEE_PER_TRADE > cash_available() + 1e-6:
         return False, "Nicht genug Paper-Cash (inkl. 1 $ Gebühr)."
     if take is None:
@@ -6636,6 +6744,7 @@ def execute_paper_buy(ticker, side, last_px, stop, amount, leverage, typ, wkn, r
         "take": take,
         "off_plan": bool(off_plan),
     }
+    pos.update(position_risk_snapshot(pos))
     st.session_state.positions.append(pos)
     st.session_state.fills.insert(
         0,
@@ -6933,6 +7042,34 @@ def _settings_dialog():
                 "🔒 Standard: Yahoo Finance + Finnhub aktiv. Weitere Quellen und die "
                 "individuelle Auswahl sind nur im **Pro Modus** verfügbar."
             )
+
+        st.divider()
+        st.markdown("#### Event-Uhr · Quellen")
+        _ef = dict(st.session_state.get("event_source_flags") or {
+            "fred": True, "bls": True, "eurostat": True, "sec": True
+        })
+        _event_c1, _event_c2 = st.columns(2)
+        with _event_c1:
+            _fred_on = st.toggle(
+                "FRED", value=bool(_ef.get("fred", True)),
+                disabled=not bool(FRED_API_KEY), key="settings_event_src_fred"
+            )
+            _bls_on = st.toggle(
+                "BLS", value=bool(_ef.get("bls", True)), key="settings_event_src_bls"
+            )
+        with _event_c2:
+            _eu_on = st.toggle(
+                "EUROSTAT", value=bool(_ef.get("eurostat", True)), key="settings_event_src_eurostat"
+            )
+            _sec_on = st.toggle(
+                "SEC Form 4", value=bool(_ef.get("sec", True)), key="settings_event_src_sec"
+            )
+        st.session_state.event_source_flags = {
+            "fred": bool(_fred_on), "bls": bool(_bls_on),
+            "eurostat": bool(_eu_on), "sec": bool(_sec_on),
+        }
+        if not FRED_API_KEY:
+            st.caption("FRED deaktiviert: FRED_API_KEY fehlt.")
 
     with col2:
         st.markdown("#### Gebühr & Cash")
@@ -7458,12 +7595,18 @@ def _trade_failure(msg):
 
 
 def update_stop(pid: str, new_stop: float, event_type: str = "trail"):
-    """Setzt den Paper-Stop und erzeugt bei echter Änderung ein Critical Event,
-    damit der Nutzer denselben Stop im echten Broker nachzieht."""
+    """Setzt einen Stop nur in sicherer Richtung und erzeugt ein Critical Event.
+
+    Invariante: LONG-Stop darf niemals sinken, SHORT-Stop niemals steigen.
+    Zusätzlich darf der Stop nicht hinter die KO-Schwelle gelegt werden. Diese Regeln
+    liegen bewusst hier in der tiefsten Änderungsfunktion und nicht nur in der UI.
+    """
     try:
         new_stop = float(new_stop)
     except (TypeError, ValueError):
-        return
+        return False
+    if not math.isfinite(new_stop) or new_stop <= 0:
+        return False
     for pos in st.session_state.positions:
         if pos.get("id") != pid:
             continue
@@ -7471,9 +7614,28 @@ def update_stop(pid: str, new_stop: float, event_type: str = "trail"):
             old_stop = float(pos.get("stop")) if pos.get("stop") is not None else None
         except (TypeError, ValueError):
             old_stop = None
+        side = str(pos.get("side") or "").upper()
+        ko = _as_float(pos.get("ko"))
+        if old_stop is not None:
+            if side == "LONG" and new_stop < old_stop - 1e-9:
+                return False
+            if side == "SHORT" and new_stop > old_stop + 1e-9:
+                return False
+        if ko is not None and stop_is_beyond_ko(side, new_stop, ko):
+            return False
+        entry = _as_float(pos.get("entry"))
+        if entry is not None:
+            # Ein Stop auf der falschen Seite des Marktes ist fast immer ein Daten-/UI-Fehler.
+            # Breakeven und profitable Trailing-Stops bleiben ausdrücklich erlaubt.
+            if side == "LONG" and new_stop >= entry and old_stop is None:
+                pass
+            elif side == "SHORT" and new_stop <= entry and old_stop is None:
+                pass
         if old_stop is not None and abs(old_stop - new_stop) < 1e-9:
-            return
+            return True
         pos["stop"] = new_stop
+        risk = position_risk_snapshot(pos)
+        pos.update(risk)
         kind = event_type if event_type in CRITICAL_EVENT_LABELS else "trail"
         log_critical_trade_event(
             event_type=kind,
@@ -7483,16 +7645,25 @@ def update_stop(pid: str, new_stop: float, event_type: str = "trail"):
                 "old_stop": old_stop,
                 "new_stop": new_stop,
                 "price": pos.get("last") or pos.get("entry"),
+                "planned_risk_eur": risk.get("planned_risk_eur"),
+                "ko_risk_eur": risk.get("ko_risk_eur"),
             },
         )
         save_app_state()
-        return
+        return True
+    return False
 
 
 def update_take(pid: str, new_take: float, event_type: str = "take-set"):
     for pos in st.session_state.get("positions") or []:
         if pos.get("id") != pid:
             continue
+        new_take = _as_float(new_take)
+        if new_take is not None and new_take <= 0:
+            pos["take"] = None
+            log_critical_trade_event("take-clear", pos.get("ticker") or "", pos.get("side"), {"take": None, "price": pos.get("last")})
+            save_app_state()
+            return True
         error = validate_take_profit_distance(pos.get("side"), pos.get("entry"), new_take, pos.get("amount", 0), pos.get("leverage", 1), pos.get("ko"))
         if error:
             st.error(error)
@@ -8166,79 +8337,197 @@ def _bt_prepare(df: pd.DataFrame, opening_minutes: int = 30) -> pd.DataFrame:
 
 
 def run_backtest(df: pd.DataFrame, params: dict) -> tuple[pd.DataFrame, pd.DataFrame]:
-    x=_bt_prepare(df, int(params.get('opening_minutes',30)))
-    if x.empty or len(x)<20:
+    """Run the OR/VWAP backtest with conservative execution modelling.
+
+    Important modelling rules:
+    - Entries/exits pay configurable slippage plus half-spread.
+    - A gap through a stop/take executes at the opening price, not at the requested level.
+    - If both stop and take are touched by the same OHLC candle, ``intrabar_policy``
+      controls the result: conservative (stop first), optimistic (take first), or skip.
+    - The default is conservative because OHLC data cannot reveal the intrabar path.
+    """
+    x = _bt_prepare(df, int(params.get('opening_minutes', 30)))
+    if x.empty or len(x) < 20:
         return pd.DataFrame(), pd.DataFrame()
-    fee=float(params.get('fee_pct',0.0025))
-    slip=float(params.get('slippage_pct',0.0010))
-    risk_pct=float(params.get('risk_pct',0.01))
-    take_r=float(params.get('take_r',2.0))
-    capital=float(params.get('capital',10000.0))
-    max_pos=float(params.get('max_position_pct',0.35))
-    stop_mult=float(params.get('stop_atr',1.2))
-    one_per_day=bool(params.get('one_trade_per_day',True))
-    trades=[]; equity=[]; eq=capital; pos=None; traded_days=set()
-    for i in range(1,len(x)):
-        row=x.iloc[i]; day=row['_day']
-        prev=x.iloc[i-1]
+
+    fee = float(params.get('fee_pct', 0.0025))
+    slip = max(0.0, float(params.get('slippage_pct', 0.0010)))
+    spread = max(0.0, float(params.get('spread_pct', 0.0000)))
+    half_spread = spread / 2.0
+    risk_pct = float(params.get('risk_pct', 0.01))
+    take_r = float(params.get('take_r', 2.0))
+    capital = float(params.get('capital', 10000.0))
+    max_pos = float(params.get('max_position_pct', 0.35))
+    stop_mult = float(params.get('stop_atr', 1.2))
+    one_per_day = bool(params.get('one_trade_per_day', True))
+    intrabar_policy = str(params.get('intrabar_policy', 'conservative')).lower()
+    if intrabar_policy not in {'conservative', 'optimistic', 'skip'}:
+        intrabar_policy = 'conservative'
+
+    def adverse_price(price: float, side: str, is_entry: bool) -> float:
+        """Apply spread + slippage in the adverse direction."""
+        # For a LONG position we buy on entry and sell on exit.
+        # For SHORT we sell on entry and buy on exit.
+        buy = (side == 'LONG' and is_entry) or (side == 'SHORT' and not is_entry)
+        impact = slip + half_spread
+        return price * (1.0 + impact if buy else 1.0 - impact)
+
+    def exit_price_at_level(level: float, side: str) -> float:
+        return adverse_price(float(level), side, is_entry=False)
+
+    trades = []
+    equity = []
+    eq = capital
+    pos = None
+    traded_days = set()
+
+    for i in range(1, len(x)):
+        row = x.iloc[i]
+        day = row['_day']
+        prev = x.iloc[i - 1]
+
         if pos is not None:
-            high=float(row['High']); low=float(row['Low']); close=float(row['Close'])
-            exit_px=None; reason=None
-            if pos['side']=='LONG':
-                if low<=pos['stop']: exit_px=pos['stop']*(1-slip); reason='stop'
-                elif high>=pos['take']: exit_px=pos['take']*(1-slip); reason='take'
+            high = float(row['High'])
+            low = float(row['Low'])
+            close = float(row['Close'])
+            open_px = float(row['Open'])
+            stop_hit = (low <= pos['stop']) if pos['side'] == 'LONG' else (high >= pos['stop'])
+            take_hit = (high >= pos['take']) if pos['side'] == 'LONG' else (low <= pos['take'])
+
+            exit_px = None
+            reason = None
+            ambiguous = bool(stop_hit and take_hit)
+
+            # First model a gap through either exit level. The opening auction/print
+            # is the best OHLC-only proxy for the executable price in that case.
+            if pos['side'] == 'LONG':
+                gap_stop = open_px <= pos['stop']
+                gap_take = open_px >= pos['take']
             else:
-                if high>=pos['stop']: exit_px=pos['stop']*(1+slip); reason='stop'
-                elif low<=pos['take']: exit_px=pos['take']*(1+slip); reason='take'
-            next_day = (i==len(x)-1) or (x.iloc[i+1]['_day']!=day)
+                gap_stop = open_px >= pos['stop']
+                gap_take = open_px <= pos['take']
+
+            if gap_stop:
+                exit_px = adverse_price(open_px, pos['side'], is_entry=False)
+                reason = 'gap-stop'
+                ambiguous = False
+            elif gap_take:
+                exit_px = adverse_price(open_px, pos['side'], is_entry=False)
+                reason = 'gap-take'
+                ambiguous = False
+            elif ambiguous:
+                if intrabar_policy == 'skip':
+                    # We cannot know which level was reached first from OHLC alone.
+                    # Do not manufacture an edge; keep the position open.
+                    continue
+                if intrabar_policy == 'optimistic':
+                    exit_px = exit_price_at_level(pos['take'], pos['side'])
+                    reason = 'take-ambiguous'
+                else:
+                    exit_px = exit_price_at_level(pos['stop'], pos['side'])
+                    reason = 'stop-ambiguous'
+            elif stop_hit:
+                exit_px = exit_price_at_level(pos['stop'], pos['side'])
+                reason = 'stop'
+            elif take_hit:
+                exit_px = exit_price_at_level(pos['take'], pos['side'])
+                reason = 'take'
+
+            next_day = (i == len(x) - 1) or (x.iloc[i + 1]['_day'] != day)
             if exit_px is None and next_day:
-                exit_px=close*(1-slip if pos['side']=='LONG' else 1+slip); reason='eod'
+                exit_px = adverse_price(close, pos['side'], is_entry=False)
+                reason = 'eod'
+
             if exit_px is not None:
-                gross=(exit_px/pos['entry']-1.0)*(1 if pos['side']=='LONG' else -1)*pos['notional']
-                exit_fee=pos['notional']*fee
-                net=gross-pos['entry_fee']-exit_fee
-                r=net/max(pos['risk_eur'],1e-9)
-                eq+=net
-                trades.append({'date':str(day),'side':pos['side'],'entry':pos['entry'],'exit':exit_px,'reason':reason,'gross_pnl':gross,'fees':pos['entry_fee']+exit_fee,'net_pnl':net,'R':r,'equity':eq})
-                equity.append({'time':x.index[i],'equity':eq})
-                pos=None
+                gross = (exit_px / pos['entry'] - 1.0) * (1 if pos['side'] == 'LONG' else -1) * pos['notional']
+                exit_fee = pos['notional'] * fee
+                net = gross - pos['entry_fee'] - exit_fee
+                r = net / max(pos['risk_eur'], 1e-9)
+                eq += net
+                trades.append({
+                    'date': str(day), 'side': pos['side'], 'entry': pos['entry'], 'exit': exit_px,
+                    'reason': reason, 'ambiguous_bar': ambiguous, 'gross_pnl': gross,
+                    'fees': pos['entry_fee'] + exit_fee, 'net_pnl': net, 'R': r, 'equity': eq,
+                })
+                equity.append({'time': x.index[i], 'equity': eq})
+                pos = None
             continue
+
         if one_per_day and day in traded_days:
             continue
         if not bool(row['_active']):
             continue
         if pd.isna(row['VWAP']) or pd.isna(row['TR']):
             continue
-        long_sig=float(row['Close'])>float(row['ORH']) and float(row['Close'])>float(row['VWAP']) and float(prev['Close'])<=float(prev['ORH'])
-        short_sig=float(row['Close'])<float(row['ORL']) and float(row['Close'])<float(row['VWAP']) and float(prev['Close'])>=float(prev['ORL'])
+
+        long_sig = (
+            float(row['Close']) > float(row['ORH'])
+            and float(row['Close']) > float(row['VWAP'])
+            and float(prev['Close']) <= float(prev['ORH'])
+        )
+        short_sig = (
+            float(row['Close']) < float(row['ORL'])
+            and float(row['Close']) < float(row['VWAP'])
+            and float(prev['Close']) >= float(prev['ORL'])
+        )
         if not (long_sig or short_sig):
             continue
-        side='LONG' if long_sig else 'SHORT'
-        entry=float(row['Close'])*(1+slip if side=='LONG' else 1-slip)
-        atr=max(float(row['TR']),entry*0.002)
-        stop_dist=max(atr*stop_mult,entry*0.001)
-        risk_eur=eq*risk_pct
-        notional=min(eq*max_pos, risk_eur/(stop_dist/entry))
-        if notional<=0: continue
-        stop=entry-stop_dist if side=='LONG' else entry+stop_dist
-        take=entry+take_r*stop_dist if side=='LONG' else entry-take_r*stop_dist
-        entry_fee=notional*fee
-        pos={'side':side,'entry':entry,'stop':stop,'take':take,'notional':notional,'risk_eur':risk_eur,'entry_fee':entry_fee}
-        traded_days.add(day)
-    t=pd.DataFrame(trades)
-    e=pd.DataFrame(equity)
-    if not e.empty:
-        e['peak']=e['equity'].cummax(); e['drawdown']=e['equity']-e['peak']; e['drawdown_pct']=e['drawdown']/e['peak']*100
-    return t,e
 
+        side = 'LONG' if long_sig else 'SHORT'
+        entry = adverse_price(float(row['Close']), side, is_entry=True)
+        atr = max(float(row['TR']), entry * 0.002)
+        stop_dist = max(atr * stop_mult, entry * 0.001)
+        risk_eur = eq * risk_pct
+        notional = min(eq * max_pos, risk_eur / (stop_dist / entry))
+        if notional <= 0:
+            continue
+
+        stop = entry - stop_dist if side == 'LONG' else entry + stop_dist
+        take = entry + take_r * stop_dist if side == 'LONG' else entry - take_r * stop_dist
+        entry_fee = notional * fee
+        pos = {
+            'side': side, 'entry': entry, 'stop': stop, 'take': take,
+            'notional': notional, 'risk_eur': risk_eur, 'entry_fee': entry_fee,
+        }
+        traded_days.add(day)
+
+    t = pd.DataFrame(trades)
+    e = pd.DataFrame(equity)
+    if not e.empty:
+        e['peak'] = e['equity'].cummax()
+        e['drawdown'] = e['equity'] - e['peak']
+        e['drawdown_pct'] = e['drawdown'] / e['peak'].replace(0, pd.NA) * 100
+    return t, e
 
 def metrics_from_trades(t: pd.DataFrame) -> dict:
     if t is None or t.empty:
-        return {'trades':0,'win_rate':0.0,'profit_factor':0.0,'expectancy':0.0,'avg_r':0.0,'net':0.0,'gross':0.0,'fees':0.0,'max_dd':0.0}
-    pnl=t['net_pnl'].astype(float); wins=pnl[pnl>0]; losses=pnl[pnl<0]
-    gp=float(wins.sum()); gl=float(abs(losses.sum()))
-    return {'trades':int(len(t)),'win_rate':float((pnl>0).mean()*100),'profit_factor':float(gp/gl) if gl>0 else float('inf'),'expectancy':float(pnl.mean()),'avg_r':float(t['R'].mean()),'net':float(pnl.sum()),'gross':float(t['gross_pnl'].sum()),'fees':float(t['fees'].sum()),'max_dd':0.0}
-
+        return {'trades': 0, 'win_rate': 0.0, 'profit_factor': 0.0, 'expectancy': 0.0,
+                'avg_r': 0.0, 'net': 0.0, 'gross': 0.0, 'fees': 0.0, 'max_dd': 0.0,
+                'ambiguous_bars': 0}
+    pnl = t['net_pnl'].astype(float)
+    wins = pnl[pnl > 0]
+    losses = pnl[pnl < 0]
+    gp = float(wins.sum())
+    gl = float(abs(losses.sum()))
+    max_dd = 0.0
+    if 'equity' in t.columns:
+        eq = t['equity'].astype(float)
+        peak = eq.cummax()
+        dd = (eq - peak) / peak.replace(0, pd.NA) * 100
+        max_dd = float(abs(dd.min())) if len(dd) else 0.0
+    ambiguous = int(t['ambiguous_bar'].sum()) if 'ambiguous_bar' in t.columns else 0
+    return {
+        'trades': int(len(t)),
+        'win_rate': float((pnl > 0).mean() * 100),
+        'profit_factor': float(gp / gl) if gl > 0 else float('inf'),
+        'expectancy': float(pnl.mean()),
+        'avg_r': float(t['R'].mean()),
+        'net': float(pnl.sum()),
+        'gross': float(t['gross_pnl'].sum()),
+        'fees': float(t['fees'].sum()),
+        'max_dd': max_dd,
+        'ambiguous_bars': ambiguous,
+    }
 
 def monte_carlo_from_trades(t: pd.DataFrame, runs: int = 1000, seed: int = 42) -> pd.DataFrame:
     if t is None or t.empty: return pd.DataFrame()
@@ -8252,33 +8541,76 @@ def monte_carlo_from_trades(t: pd.DataFrame, runs: int = 1000, seed: int = 42) -
 
 
 def compare_parameters(df: pd.DataFrame, base: dict) -> pd.DataFrame:
-    rows=[]
-    for opening,take,stop in product([15,30,45],[1.5,2.0,2.5],[0.8,1.2,1.6]):
-        p={**base,'opening_minutes':opening,'take_r':take,'stop_atr':stop}
-        t,e=run_backtest(df,p); m=metrics_from_trades(t)
-        rows.append({'OR (Min)':opening,'Take R':take,'Stop ATR':stop,**m})
-    out=pd.DataFrame(rows)
-    return out.sort_values(['profit_factor','net','win_rate'],ascending=[False,False,False]) if not out.empty else out
+    rows = []
+    for opening, take, stop in product([15, 30, 45], [1.5, 2.0, 2.5], [0.8, 1.2, 1.6]):
+        p = {**base, 'opening_minutes': opening, 'take_r': take, 'stop_atr': stop}
+        t, e = run_backtest(df, p)
+        m = metrics_from_trades(t)
+        # Robustness score: reward expectancy and sample size, penalise drawdown.
+        # It deliberately does not let a tiny sample with an extreme PF dominate.
+        n = max(int(m['trades']), 0)
+        robust = 0.0
+        if n > 0:
+            robust = float(m['expectancy']) * math.sqrt(n) / (1.0 + float(m['max_dd']) / 100.0)
+        rows.append({'OR (Min)': opening, 'Take R': take, 'Stop ATR': stop, **m,
+                     'robust_score': robust})
+    out = pd.DataFrame(rows)
+    return out.sort_values(['robust_score', 'profit_factor', 'net'], ascending=[False, False, False]) if not out.empty else out
 
+def walk_forward_backtest(df: pd.DataFrame, base: dict, train_days: int = 20, test_days: int = 10) -> tuple[pd.DataFrame, pd.DataFrame]:
+    if df is None or df.empty:
+        return pd.DataFrame(), pd.DataFrame()
+    x = df.copy()
+    days = sorted(pd.Series(x.index.date).unique())
+    results = []
+    all_test = []
+    min_train_trades = int(base.get('min_train_trades', 5))
 
-def walk_forward_backtest(df: pd.DataFrame, base: dict, train_days: int = 20, test_days: int = 10) -> tuple[pd.DataFrame,pd.DataFrame]:
-    if df is None or df.empty: return pd.DataFrame(),pd.DataFrame()
-    x=df.copy(); days=sorted(pd.Series(x.index.date).unique())
-    results=[]; all_test=[]
-    for start in range(0,max(0,len(days)-train_days-test_days+1),test_days):
-        tr_days=days[start:start+train_days]; te_days=days[start+train_days:start+train_days+test_days]
-        if len(tr_days)<train_days or len(te_days)<test_days: break
-        tr=x[pd.Series(x.index.date,index=x.index).isin(tr_days)]
-        te=x[pd.Series(x.index.date,index=x.index).isin(te_days)]
-        grid=compare_parameters(tr,base)
-        if grid.empty: continue
-        best=grid.iloc[0]
-        p={**base,'opening_minutes':int(best['OR (Min)']),'take_r':float(best['Take R']),'stop_atr':float(best['Stop ATR'])}
-        tt,ee=run_backtest(te,p); m=metrics_from_trades(tt)
-        results.append({'train_start':str(tr_days[0]),'train_end':str(tr_days[-1]),'test_start':str(te_days[0]),'test_end':str(te_days[-1]),'OR':p['opening_minutes'],'TakeR':p['take_r'],'StopATR':p['stop_atr'],**m})
-        if not tt.empty: all_test.append(tt)
-    return pd.DataFrame(results), (pd.concat(all_test,ignore_index=True) if all_test else pd.DataFrame())
+    for start in range(0, max(0, len(days) - train_days - test_days + 1), test_days):
+        tr_days = days[start:start + train_days]
+        te_days = days[start + train_days:start + train_days + test_days]
+        if len(tr_days) < train_days or len(te_days) < test_days:
+            break
+        tr_mask = pd.Series(x.index.date, index=x.index).isin(tr_days)
+        te_mask = pd.Series(x.index.date, index=x.index).isin(te_days)
+        tr = x[tr_mask]
+        te = x[te_mask]
 
+        grid = compare_parameters(tr, base)
+        if grid.empty:
+            continue
+        eligible = grid[grid['trades'] >= min_train_trades]
+        if eligible.empty:
+            # Do not silently fail a window; flag that the sample was too small and
+            # use the best available candidate only as a fallback.
+            best = grid.iloc[0]
+            selection_status = 'fallback_low_sample'
+        else:
+            best = eligible.iloc[0]
+            selection_status = 'eligible'
+
+        p = {
+            **base,
+            'opening_minutes': int(best['OR (Min)']),
+            'take_r': float(best['Take R']),
+            'stop_atr': float(best['Stop ATR']),
+        }
+        tt, ee = run_backtest(te, p)
+        m = metrics_from_trades(tt)
+        results.append({
+            'train_start': str(tr_days[0]), 'train_end': str(tr_days[-1]),
+            'test_start': str(te_days[0]), 'test_end': str(te_days[-1]),
+            'OR': p['opening_minutes'], 'TakeR': p['take_r'], 'StopATR': p['stop_atr'],
+            'train_trades': int(best['trades']),
+            'train_max_dd': float(best['max_dd']),
+            'train_robust_score': float(best['robust_score']),
+            'selection': selection_status,
+            **m,
+        })
+        if not tt.empty:
+            all_test.append(tt)
+
+    return pd.DataFrame(results), (pd.concat(all_test, ignore_index=True) if all_test else pd.DataFrame())
 
 def export_backtest_pdf(trades: pd.DataFrame, equity: pd.DataFrame, params: dict, m: dict, ticker: str) -> bytes:
     """Erzeugt ein PDF mit Backtest-Kennzahlen + Equity-Curve. Benötigt fpdf2 +
@@ -8331,6 +8663,18 @@ def render_prio3_analytics(meta):
     stop_atr=c4.slider('Stop-ATR-Faktor',0.5,3.0,1.2,0.1,key='bt_stop')
     risk=c5.slider('Risiko %',0.25,2.0,1.0,0.25,key='bt_risk')
     one=c6.checkbox('1 Trade/Tag',value=True,key='bt_one')
+    c7,c8=st.columns(2)
+    intrabar_policy=c7.selectbox(
+        'Wenn Stop & Take in derselben Candle getroffen werden',
+        ['conservative','optimistic','skip'],
+        format_func=lambda v: {'conservative':'Konservativ — Stop zuerst','optimistic':'Optimistisch — Take zuerst','skip':'Nicht werten — Position offen lassen'}[v],
+        index=0,key='bt_intrabar_policy',
+        help='OHLC-Daten zeigen die Reihenfolge innerhalb der Candle nicht. Standard ist bewusst konservativ.'
+    )
+    spread_pct=c8.number_input(
+        'Modellierter Spread (%)', min_value=0.0, max_value=2.0, value=0.0, step=0.01,
+        key='bt_spread_pct', help='Zusätzlich zur Slippage wird je Seite die halbe Spreadbreite als Ausführungskosten modelliert.'
+    )
     _bt_run_col1, _bt_run_col2, _bt_run_col3 = st.columns([2, 1, 2])
     with _bt_run_col2:
         _bt_run_clicked = st.button('Backtest starten', type='primary', key='bt_run', use_container_width=True)
@@ -8350,7 +8694,12 @@ def render_prio3_analytics(meta):
         else:
             st.session_state.bt_df = bt_result["df"]
             st.session_state.bt_data_meta = bt_result
-            st.session_state.bt_params={'opening_minutes':opening,'take_r':take_r,'stop_atr':stop_atr,'risk_pct':risk/100,'fee_pct':0.0025,'slippage_pct':0.001,'capital':CAPITAL,'max_position_pct':0.35,'one_trade_per_day':one}
+            st.session_state.bt_params={
+                'opening_minutes':opening,'take_r':take_r,'stop_atr':stop_atr,'risk_pct':risk/100,
+                'fee_pct':0.0025,'slippage_pct':0.001,'spread_pct':spread_pct/100,
+                'capital':CAPITAL,'max_position_pct':0.35,'one_trade_per_day':one,
+                'intrabar_policy':intrabar_policy,'min_train_trades':5,
+            }
             st.session_state.bt_trades,st.session_state.bt_equity=run_backtest(st.session_state.bt_df,st.session_state.bt_params)
             if st.session_state.bt_trades.empty:
                 st.warning('Keine Trades mit den aktuellen Parametern erzeugt. Versuche andere Einstellungen (z.B. längere OR-Minuten oder niedrigeren Stop-ATR).')
@@ -11683,7 +12032,7 @@ def dashboard():
 
         check_earnings_alerts(focus, rec_events or {})
         _maybe_show_earnings_alert_dialog(focus, rec_events or {})
-        check_setup_alerts(focus, rec or {})
+        check_setup_alerts(focus, rec or {}, venue=sess.get("venue") or "US Regular")
 
         # Track recommendation history — WAIT bewusst auslassen (Grundrauschen)
         if rec and rec.get("action") and str(rec.get("action")).upper() != "WAIT":
@@ -11872,19 +12221,8 @@ def dashboard():
         if not meta:
             st.caption("Titel wählen.")
         else:
-            _ef = st.session_state.get("event_source_flags", {"fred": True, "bls": True, "eurostat": True, "sec": True})
-            _ec1, _ec2, _ec3, _ec4 = st.columns(4)
-            with _ec1:
-                _fred_on = st.toggle("FRED", value=bool(_ef.get("fred", True)), disabled=not bool(FRED_API_KEY), key="event_src_fred")
-            with _ec2:
-                _bls_on = st.toggle("BLS", value=bool(_ef.get("bls", True)), key="event_src_bls")
-            with _ec3:
-                _eu_on = st.toggle("EUROSTAT", value=bool(_ef.get("eurostat", True)), key="event_src_eurostat")
-            with _ec4:
-                _sec_on = st.toggle("SEC Form 4", value=bool(_ef.get("sec", True)), key="event_src_sec")
-            st.session_state.event_source_flags = {"fred": _fred_on, "bls": _bls_on, "eurostat": _eu_on, "sec": _sec_on}
-            if not FRED_API_KEY:
-                st.caption("FRED deaktiviert: FRED_API_KEY fehlt.")
+            # Die Auswahl der Event-Uhr-Quellen liegt zentral im Einstellungsdialog.
+            # Hier nur noch die konsolidierten Ergebnisse anzeigen.
             ev = fetch_events(meta["yf"], meta["ticker"])
             st.write(f"**Session:** {ev.get('session') or '—'}")
             st.write(f"**Nächste Earnings:** {ev.get('earnings') or 'nicht gefunden'}")
@@ -12190,16 +12528,24 @@ def dashboard():
                 pnl_bg, pnl_border = "rgba(34,197,94,0.14)", "rgba(34,197,94,0.55)"
             else:
                 pnl_bg, pnl_border = "rgba(255,255,255,0.04)", "rgba(255,255,255,0.15)"
+            entry_txt = f"{float(pos.get('entry')):.4f}" if pos.get('entry') is not None else "—"
+            take_status = f"{float(pos.get('take')):.4f}" if pos.get('take') is not None else "—"
             st.markdown(
                 f"""
                 <div style="background:{pnl_bg};border:1px solid {pnl_border};
                             border-radius:8px;padding:0.5rem 0.75rem;margin-bottom:0.3rem;">
                     {sev_icon} <b>{pos['ticker']}</b> {pos.get('wkn') or '—'} · {pos['side']} · 
-                    {held:.0f} € · Last {last_txt} · P&amp;L {pnl_val:+.2f} €
+                    {held:.0f} € · Entry {entry_txt} · Last {last_txt} · Take {take_status} · P&amp;L {pnl_val:+.2f} €
                 </div>
                 """,
                 unsafe_allow_html=True,
             )
+            focus_col, _ = st.columns([1.2, 5])
+            with focus_col:
+                if st.button("🎯 Fokus", key=f"position_focus_{pid}", use_container_width=True, disabled=pos.get("ticker") == focus):
+                    st.session_state.focus = pos.get("ticker")
+                    save_app_state()
+                    st.rerun()
             ko_px = pos.get("ko")
             if pos.get("take"):
                 st.caption(f"Take (PDH/OR) {float(pos['take']):.4f}")
@@ -12234,17 +12580,34 @@ def dashboard():
                     key=f"sellamt_{pid}",
                 )
             with b:
+                # Bestands-Take: vorhandenen Wert beibehalten, sonst sinnvolles Ziel
+                # aus OR/PDH bzw. OR/PDL/PDL-Kontext vorbelegen. 0 bedeutet bewusst: kein Take.
+                default_take = _as_float(pos.get("take"))
+                if default_take is None:
+                    try:
+                        _pmeta = find_meta(pos.get("ticker"))
+                        _plv = fetch_levels(_pmeta["yf"]) if _pmeta else {}
+                        default_take = _as_float(suggest_take_profit(pos.get("side"), pos.get("last") or pos.get("entry"), _plv))
+                    except Exception:
+                        default_take = None
+                new_take = st.number_input(
+                    "Take-Profit",
+                    min_value=0.0,
+                    value=float(default_take or 0.0),
+                    key=f"take_{pid}",
+                    format="%.4f",
+                    help="0 = kein Take festlegen. Vorbelegung nutzt das nächste logische Ziel (OR/PDH bzw. OR/PDL).",
+                )
                 new_stop = st.number_input(
                     "Stop",
                     value=float(pos.get("stop") or 0),
                     key=f"stop_{pid}",
                     format="%.4f",
                 )
-                new_take = st.number_input("Take-Profit", value=float(pos.get("take") or 0), key=f"take_{pid}", format="%.4f")
             with c:
                 if st.button("Take setzen", key=f"set_take_{pid}", use_container_width=True):
                     if update_take(pid, new_take):
-                        st.success("Take-Profit gesetzt.")
+                        st.success("Take-Profit gesetzt." if new_take > 0 else "Take-Profit entfernt.")
                         st.rerun()
                 if st.button("Stop setzen", key=f"setstop_{pid}", use_container_width=True):
                     ticker = next((p.get("ticker", "") for p in st.session_state.positions if p.get("id") == pid), "")
@@ -12256,71 +12619,70 @@ def dashboard():
                     update_stop(pid, float(advice["trail"]))
                     st.toast(f"🛑 Stop nachgezogen: {ticker} @ {float(advice['trail']):.4f}", icon="📍")
                     st.rerun()
-            with d:
-                sell_c1, sell_c2, sell_c3 = st.columns(3)
-                with sell_c1:
-                    sell_clicked = st.button(
-                        "Verkaufen", key=f"sell_{pid}", disabled=sell_amt <= 0, use_container_width=True,
+            # Schnellverkauf bewusst außerhalb der Spalten: drei Aktionen
+            # untereinander und über die volle verfügbare Breite.
+            sell_clicked = st.button(
+                "Verkaufen", key=f"sell_{pid}", disabled=sell_amt <= 0, use_container_width=True,
+            )
+            if sell_clicked:
+                pos_before = next((p for p in st.session_state.positions if p.get("id") == pid), {})
+                if sell_amt >= held - 0.01:
+                    request_trade_confirmation(
+                        kind="sell", pid=pid, watch=watch,
+                        ticker=pos_before.get("ticker"), side=pos_before.get("side"),
+                        amount=pos_before.get("amount", sell_amt),
+                        price=pos_before.get("last") or pos_before.get("entry"),
+                        stop=pos_before.get("stop"), leverage=pos_before.get("leverage"),
+                        typ=pos_before.get("typ"), wkn=pos_before.get("wkn"),
+                        pnl=pos_before.get("pnl", 0.0),
+                        action="Verkauf", reason="Manueller Verkauf",
+                        exec_reason="manual-sell",
+                        setup_label=pos_before.get("setup_label") or "OTHER",
                     )
-                if sell_clicked:
+                else:
+                    frac = sell_amt / max(held, 1e-9)
+                    request_trade_confirmation(
+                        kind="partial", pid=pid, fraction=frac, watch=watch,
+                        ticker=pos_before.get("ticker"), side=pos_before.get("side"),
+                        amount=sell_amt,
+                        price=pos_before.get("last") or pos_before.get("entry"),
+                        stop=pos_before.get("stop"), leverage=pos_before.get("leverage"),
+                        typ=pos_before.get("typ"), wkn=pos_before.get("wkn"),
+                        pnl=float(pos_before.get("pnl", 0.0) or 0.0) * frac,
+                        action=f"Teilverkauf {frac:.0%}", reason="Teilverkauf",
+                        exec_reason="partial-sell",
+                        setup_label=pos_before.get("setup_label") or "OTHER",
+                    )
+            st.markdown("<div style='height:0.25rem'></div>", unsafe_allow_html=True)
+            if st.button("50%", key=f"sell50_{pid}", disabled=held <= 0, use_container_width=True):
                     pos_before = next((p for p in st.session_state.positions if p.get("id") == pid), {})
-                    if sell_amt >= held - 0.01:
-                        request_trade_confirmation(
-                            kind="sell", pid=pid, watch=watch,
-                            ticker=pos_before.get("ticker"), side=pos_before.get("side"),
-                            amount=pos_before.get("amount", sell_amt),
-                            price=pos_before.get("last") or pos_before.get("entry"),
-                            stop=pos_before.get("stop"), leverage=pos_before.get("leverage"),
-                            typ=pos_before.get("typ"), wkn=pos_before.get("wkn"),
-                            pnl=pos_before.get("pnl", 0.0),
-                            action="Verkauf", reason="Manueller Verkauf",
-                            exec_reason="manual-sell",
-                            setup_label=pos_before.get("setup_label") or "OTHER",
-                        )
-                    else:
-                        frac = sell_amt / max(held, 1e-9)
-                        request_trade_confirmation(
-                            kind="partial", pid=pid, fraction=frac, watch=watch,
-                            ticker=pos_before.get("ticker"), side=pos_before.get("side"),
-                            amount=sell_amt,
-                            price=pos_before.get("last") or pos_before.get("entry"),
-                            stop=pos_before.get("stop"), leverage=pos_before.get("leverage"),
-                            typ=pos_before.get("typ"), wkn=pos_before.get("wkn"),
-                            pnl=float(pos_before.get("pnl", 0.0) or 0.0) * frac,
-                            action=f"Teilverkauf {frac:.0%}", reason="Teilverkauf",
-                            exec_reason="partial-sell",
-                            setup_label=pos_before.get("setup_label") or "OTHER",
-                        )
-                with sell_c2:
-                    if st.button("50%", key=f"sell50_{pid}", disabled=held <= 0, use_container_width=True):
-                        pos_before = next((p for p in st.session_state.positions if p.get("id") == pid), {})
-                        request_trade_confirmation(
-                            kind="partial", pid=pid, fraction=0.5, watch=watch,
-                            ticker=pos_before.get("ticker"), side=pos_before.get("side"),
-                            amount=float(pos_before.get("amount", 0) or 0) * 0.5,
-                            price=pos_before.get("last") or pos_before.get("entry"),
-                            stop=pos_before.get("stop"), leverage=pos_before.get("leverage"),
-                            typ=pos_before.get("typ"), wkn=pos_before.get("wkn"),
-                            pnl=float(pos_before.get("pnl", 0.0) or 0) * 0.5,
-                            action="Teilverkauf 50%", reason="Schnellverkauf 50%",
-                            exec_reason="quick-50",
-                            setup_label=pos_before.get("setup_label") or "OTHER",
-                        )
-                with sell_c3:
-                    if st.button("Alles", key=f"sellall_{pid}", disabled=held <= 0, use_container_width=True):
-                        pos_before = next((p for p in st.session_state.positions if p.get("id") == pid), {})
-                        request_trade_confirmation(
-                            kind="sell", pid=pid, watch=watch,
-                            ticker=pos_before.get("ticker"), side=pos_before.get("side"),
-                            amount=pos_before.get("amount", 0),
-                            price=pos_before.get("last") or pos_before.get("entry"),
-                            stop=pos_before.get("stop"), leverage=pos_before.get("leverage"),
-                            typ=pos_before.get("typ"), wkn=pos_before.get("wkn"),
-                            pnl=pos_before.get("pnl", 0.0),
-                            action="Verkauf", reason="Schnellverkauf komplett",
-                            exec_reason="quick-all",
-                            setup_label=pos_before.get("setup_label") or "OTHER",
-                        )
+                    request_trade_confirmation(
+                        kind="partial", pid=pid, fraction=0.5, watch=watch,
+                        ticker=pos_before.get("ticker"), side=pos_before.get("side"),
+                        amount=float(pos_before.get("amount", 0) or 0) * 0.5,
+                        price=pos_before.get("last") or pos_before.get("entry"),
+                        stop=pos_before.get("stop"), leverage=pos_before.get("leverage"),
+                        typ=pos_before.get("typ"), wkn=pos_before.get("wkn"),
+                        pnl=float(pos_before.get("pnl", 0.0) or 0) * 0.5,
+                        action="Teilverkauf 50%", reason="Schnellverkauf 50%",
+                        exec_reason="quick-50",
+                        setup_label=pos_before.get("setup_label") or "OTHER",
+                    )
+            st.markdown("<div style='height:0.25rem'></div>", unsafe_allow_html=True)
+            if st.button("Alles", key=f"sellall_{pid}", disabled=held <= 0, use_container_width=True):
+                    pos_before = next((p for p in st.session_state.positions if p.get("id") == pid), {})
+                    request_trade_confirmation(
+                        kind="sell", pid=pid, watch=watch,
+                        ticker=pos_before.get("ticker"), side=pos_before.get("side"),
+                        amount=pos_before.get("amount", 0),
+                        price=pos_before.get("last") or pos_before.get("entry"),
+                        stop=pos_before.get("stop"), leverage=pos_before.get("leverage"),
+                        typ=pos_before.get("typ"), wkn=pos_before.get("wkn"),
+                        pnl=pos_before.get("pnl", 0.0),
+                        action="Verkauf", reason="Schnellverkauf komplett",
+                        exec_reason="quick-all",
+                        setup_label=pos_before.get("setup_label") or "OTHER",
+                    )
             pos_amt = float(pos.get("amount") or 0)
             # Konsistent mit den anderen Kauf-Pfaden (Empfehlung/Katalog) darf auch beim
             # Nachkauf die GESAMTE Positionsgröße (bestehender Einsatz + Nachkauf) das
