@@ -7,77 +7,42 @@
 <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-<header class="nav">
-  <a class="brand" href="./index.html">VOLT<span>DESK</span></a>
-  <nav>
-    <a href="./why-voltdesk.html">Warum VoltDesk</a><a href="./toolstack.html">Toolstack</a><a href="./how-it-works.html">So funktioniert es</a><a href="./faq.html">FAQ</a><a href="./hilfe.html">Hilfe</a><a href="./index.html#pricing">Preise</a><a href="./withdrawal.html">Widerrufsrecht</a>
-  </nav>
-  <div class="actions"><a class="btn small" href="https://voltdesk.streamlit.app">Kostenlos testen</a></div>
-</header>
-
-<main class="page-shell">
-  <section class="page-hero">
-    <div class="eyebrow">VOLTDESK FAQ</div>
-    <h1>Fragen?<br><em>Hier findest du Antworten.</em></h1>
-    <p class="lead">VoltDesk ist bewusst als Trading Desk und Paper-Trading-Umgebung aufgebaut. Die wichtigsten Fragen zu Bedienung, Daten, Risiko, Empfehlungen, Pro-Funktionen und Reports findest du hier.</p>
-  </section>
-
-  <section class="faq-grid">
-    <details open><summary>Was ist VoltDesk?</summary><p>VoltDesk ist ein Trading Desk für aktive Trader. Marktdaten, Marktanalyse, Screening, Empfehlungen, Risiko-Governance, Paper Trading und Trading-Journal werden in einem Workflow verbunden.</p></details>
-    <details><summary>Ist VoltDesk ein Broker?</summary><p>Nein. VoltDesk ist keine Bank, kein Broker und keine Orderplattform. Trades in VoltDesk sind Paper Trades. Eine tatsächliche Order bei einem Broker wird nicht ausgelöst.</p></details>
-    <details><summary>Für wen ist VoltDesk gedacht?</summary><p>Für aktive Trader, die Marktinformationen strukturieren, Setups bewerten und ihre Trading-Entscheidungen disziplinierter vorbereiten und nachbereiten möchten.</p></details>
-    <details><summary>Gibt VoltDesk konkrete Kauf- oder Verkaufsempfehlungen?</summary><p>Die Engine verdichtet verfügbare Marktinformationen zu strukturierten Signalen und Empfehlungen. Die endgültige Handelsentscheidung bleibt immer beim Trader.</p></details>
-    <details><summary>Was bedeutet Paper Trading?</summary><p>Paper Trading simuliert Trades ohne tatsächlichen Kapitaleinsatz bei einem Broker. Damit lassen sich Abläufe, Strategien und Trading-Disziplin testen, ohne eine reale Order auszuführen.</p></details>
-    <details><summary>Welche Märkte unterstützt VoltDesk?</summary><p>VoltDesk arbeitet mit einem definierten Aktien-/Marktuniversum und regionalen Marktdaten. Die verfügbare Abdeckung kann sich abhängig von Datenquelle und Marktzeit unterscheiden.</p></details>
-    <details><summary>Was sind PRE, OPEN, MID und CLOSE?</summary><p>Das sind Marktphasen, die unterschiedliche Bedingungen und Regeln im Trading-Workflow abbilden: vor bzw. zum Handelsstart, während der laufenden Sitzung und zum Handelsschluss. Einzelne Regeln wie Auto-Close berücksichtigen die jeweilige Marktregion.</p></details>
-    <details><summary>Was ist die Watchlist?</summary><p>Die Watchlist enthält Titel, die du gezielt beobachten möchtest. Sie dient als persönlicher Ausgangspunkt für Analyse, Charts, News und weitere Signale.</p></details>
-    <details><summary>Was macht der Stock Picker?</summary><p>Der Stock Picker sucht aus dem verfügbaren Universum nach interessanten Titeln. Neben Nachrichten können unter anderem Volatilität, Marktbewegung und weitere verfügbare Signale in die Auswahl einfließen.</p></details>
-    <details><summary>Was macht der Stock Ranker?</summary><p>Der Stock Ranker bewertet bzw. sortiert Titel nach den im Desk verfügbaren Kriterien, damit interessante Kandidaten schneller erkannt werden können.</p></details>
-    <details><summary>Was bedeutet Setup Quality?</summary><p>Setup Quality ist eine automatische Einschätzung des erkannten Trading-Setups. Sie berücksichtigt mehrere verfügbare Faktoren, beispielsweise Konfidenz, Volumen, Muster und News. Sie ist kein Erfolgsversprechen.</p></details>
-    <details><summary>Was bedeutet Mood?</summary><p>Mood beschreibt die eigene Trading-Verfassung zum Zeitpunkt eines Trades. Das Feld unterstützt die spätere Analyse des eigenen Verhaltens und ist von der automatisch ermittelten Setup Quality getrennt.</p></details>
-    <details><summary>Was ist Tilt?</summary><p>Tilt bezeichnet im Trading eine ungünstige emotionale oder verhaltensbezogene Handelssituation. VoltDesk kann anhand definierter Kriterien warnen, pausieren oder neue Käufe sperren.</p></details>
-    <details><summary>Was ist der Kill Switch?</summary><p>Der Kill Switch ist eine zentrale Sicherheitsfunktion, mit der der Trading-Betrieb gestoppt werden kann. Er dient als letzte Eskalationsstufe der Trading-Governance.</p></details>
-    <details><summary>Was ist das Daily Loss Limit?</summary><p>Das Daily Loss Limit begrenzt den zulässigen Tagesverlust innerhalb der Trading-Governance. Wird die Grenze erreicht, können weitere Käufe blockiert werden.</p></details>
-    <details><summary>Was ist Auto-Close?</summary><p>Auto-Close schließt Positionen entsprechend den hinterlegten Regeln vor dem relevanten Handelsschluss. Die Marktregion des Titels wird dabei berücksichtigt.</p></details>
-    <details><summary>Was ist ein Gap-Stop?</summary><p>Der Gap-Stop ist eine Schutzregel für starke Kurslücken. Er berücksichtigt, dass ein Kurs bei der nächsten verfügbaren Notierung deutlich vom vorherigen Niveau abweichen kann.</p></details>
-    <details><summary>Was bedeutet KO?</summary><p>KO steht für Knock-Out. Bei einem Hebelprodukt bezeichnet die KO-Schwelle das Niveau, bei dessen Erreichen das Produkt seine Knock-Out-Eigenschaft auslösen kann.</p></details>
-    <details><summary>Was zeigt der Chart?</summary><p>Der Fokus-Chart stellt die Kursentwicklung und relevante Analyseinformationen grafisch dar. Je nach Ansicht können unter anderem VWAP, Volumen, ATR sowie Markt- oder Sektorbezüge sichtbar sein.</p></details>
-    <details><summary>Was ist VWAP?</summary><p>VWAP steht für Volume Weighted Average Price. Der volumengewichtete Durchschnittspreis dient als Referenz für die Kursentwicklung innerhalb des betrachteten Zeitraums.</p></details>
-    <details><summary>Was ist ATR?</summary><p>ATR steht für Average True Range. Der Indikator beschreibt die typische Schwankungsbreite eines Titels und wird unter anderem für Stop-Berechnungen verwendet.</p></details>
-    <details><summary>Was ist die Event-Uhr?</summary><p>Die Event-Uhr bündelt zeitkritische Informationen, beispielsweise Earnings, Insider-Aktivitäten, relevante Markttermine und weitere Ereignisse, die für einen Trade wichtig sein können.</p></details>
-    <details><summary>Was ist Telegram Push?</summary><p>Telegram Push ist eine Pro-Funktion für kritische Trading-Ereignisse. Dazu gehören unter anderem Stop, Take-Profit, Knock-Out, Gap-Stop, Auto-Close, Daily Loss Limit und Kill Switch.</p></details>
-    <details><summary>Überwacht Telegram VoltDesk rund um die Uhr?</summary><p>Nein. In der aktuellen Architektur werden Telegram-Nachrichten von der laufenden VoltDesk-Anwendung ausgelöst. Telegram ersetzt daher keinen permanent laufenden Trading-Server und keinen Broker-Alarmdienst.</p></details>
-    <details><summary>Welche Reports gibt es?</summary><p>VoltDesk kann Tages-, Wochen-, Monats- und Jahresauswertungen bereitstellen. Sie helfen dabei, P&L, Trades, Trefferquote, Gebühren und weitere Trading-Kennzahlen zu analysieren.</p></details>
-    <details><summary>Was ist Backtesting?</summary><p>Beim Backtesting wird eine Strategie anhand historischer Marktdaten simuliert. Ergebnisse aus historischen Daten sind keine Garantie für zukünftige Ergebnisse.</p></details>
-    <details><summary>Was ist der Unterschied zwischen P&L und Gebühren?</summary><p>P&L beschreibt den Gewinn oder Verlust eines Trades. Gebühren sind separat ausgewiesene Handelskosten. Beim Netto-P&L werden die relevanten Gebühren berücksichtigt.</p></details>
-    <details><summary>Warum können offene Trades in einem Tagesbericht mit 0 € P&L erscheinen?</summary><p>Ein noch nicht geschlossener Paper Trade hat noch keinen realisierten Gewinn oder Verlust. Der Bericht kann deshalb bei offenen Positionen zunächst keinen realisierten P&L ausweisen.</p></details>
-    <details><summary>Wie aktuell sind die Marktdaten?</summary><p>Die Anwendung verwendet externe Marktdatenquellen. Aktualität und Verfügbarkeit hängen von Quelle, Markt und Netzwerk ab. VoltDesk zeigt keine Garantie für unterbrechungsfreie oder tickgenaue Datenversorgung.</p></details>
-    <details><summary>Ist VoltDesk Anlageberatung?</summary><p>Nein. VoltDesk stellt Informationen, Analysen und strukturierte Entscheidungshilfen bereit. Die Nutzung ersetzt keine individuelle Anlage-, Rechts- oder Steuerberatung.</p></details>
-    <details><summary>Was passiert bei einem Daten- oder API-Ausfall?</summary><p>Externe Daten können ausfallen, verzögert eintreffen oder unvollständig sein. Die Anwendung ist deshalb nicht als alleinige Grundlage für reale Handelsentscheidungen gedacht.</p></details>
-  </section>
-
-  <section class="contact-card">
-    <div class="section-kicker">NOCH EINE FRAGE?</div>
-    <h2>Frag uns direkt.</h2>
-    <p>Beschreibe dein Problem oder deine Frage möglichst konkret. Mit dem Button wird eine E-Mail an <strong>kaisersoft.ai@gmail.com</strong> vorbereitet. Dein eigenes E-Mail-Programm öffnet sich anschließend mit der Nachricht.</p>
-    <form onsubmit="sendQuestion(event)">
-      <label for="question">Deine Frage</label>
-      <textarea id="question" name="question" rows="6" required placeholder="Zum Beispiel: Wie funktioniert der automatische Take-Profit im OPEN-Modus?"></textarea>
-      <button class="btn" type="submit">Frage per E-Mail senden <span>→</span></button>
-    </form>
-  </section>
-</main>
-
+<header class="nav"><a class="brand" href="./index.html">VOLT<span>DESK</span></a><nav><a href="./why-voltdesk.html">Warum VoltDesk</a><a href="./toolstack.html">Toolstack</a><a href="./how-it-works.html">So funktioniert es</a><a href="./faq.html">FAQ</a><a href="./hilfe.html">Hilfe</a><a href="./index.html#pricing">Preise</a><a href="./withdrawal.html">Widerrufsrecht</a></nav><div class="actions"><a class="btn small" href="https://voltdesk.streamlit.app">Kostenlos testen</a></div></header>
+<main class="page-shell"><section class="page-hero"><div class="eyebrow">VOLTDESK FAQ</div><h1>Fragen?<br><em>Hier findest du Antworten.</em></h1><p class="lead">VoltDesk ist bewusst als Trading Desk und Paper-Trading-Umgebung aufgebaut. Die wichtigsten Fragen zu Bedienung, Daten, Risiko, Empfehlungen, Pro-Funktionen und Reports findest du hier.</p></section>
+<section class="faq-grid">
+<details open><summary>Was ist VoltDesk?</summary><p>VoltDesk ist ein Trading Desk für aktive Trader. Marktdaten, Marktanalyse, Screening, Empfehlungen, Risiko-Governance, Paper Trading und Trading-Journal werden in einem Workflow verbunden.</p></details>
+<details><summary>Ist VoltDesk ein Broker?</summary><p>Nein. VoltDesk ist keine Bank, kein Broker und keine Orderplattform. Trades in VoltDesk sind Paper Trades. Eine tatsächliche Order bei einem Broker wird nicht ausgelöst.</p></details>
+<details><summary>Für wen ist VoltDesk gedacht?</summary><p>Für aktive Trader, die Marktinformationen strukturieren, Setups bewerten und ihre Trading-Entscheidungen disziplinierter vorbereiten und nachbereiten möchten.</p></details>
+<details><summary>Gibt VoltDesk konkrete Kauf- oder Verkaufsempfehlungen?</summary><p>Die Engine verdichtet verfügbare Marktinformationen zu strukturierten Signalen und Empfehlungen. Die endgültige Handelsentscheidung bleibt immer beim Trader.</p></details>
+<details><summary>Was bedeutet Paper Trading?</summary><p>Paper Trading simuliert Trades ohne tatsächlichen Kapitaleinsatz bei einem Broker. Damit lassen sich Abläufe, Strategien und Trading-Disziplin testen, ohne eine reale Order auszuführen.</p></details>
+<details><summary>Welche Märkte unterstützt VoltDesk?</summary><p>VoltDesk arbeitet mit einem definierten Aktien-/Marktuniversum und regionalen Marktdaten. Die verfügbare Abdeckung kann sich abhängig von Datenquelle und Marktzeit unterscheiden.</p></details>
+<details><summary>Was sind PRE, OPEN, MID und CLOSE?</summary><p>Das sind Marktphasen, die unterschiedliche Bedingungen und Regeln im Trading-Workflow abbilden. Einzelne Regeln wie Auto-Close berücksichtigen die jeweilige Marktregion.</p></details>
+<details><summary>Was ist die Watchlist?</summary><p>Die Watchlist enthält Titel, die du gezielt beobachten möchtest. Sie dient als persönlicher Ausgangspunkt für Analyse, Charts, News und weitere Signale.</p></details>
+<details><summary>Was macht der Stock Picker?</summary><p>Der Stock Picker sucht aus dem verfügbaren Universum nach interessanten Titeln. Neben Nachrichten können unter anderem Volatilität, Marktbewegung und weitere verfügbare Signale einfließen.</p></details>
+<details><summary>Was macht der Stock Ranker?</summary><p>Der Stock Ranker bewertet bzw. sortiert Titel nach den im Desk verfügbaren Kriterien, damit interessante Kandidaten schneller erkannt werden können.</p></details>
+<details><summary>Was bedeutet Setup Quality?</summary><p>Setup Quality ist eine automatische Einschätzung des erkannten Trading-Setups. Sie berücksichtigt mehrere verfügbare Faktoren, beispielsweise Konfidenz, Volumen, Muster und News. Sie ist kein Erfolgsversprechen.</p></details>
+<details><summary>Was bedeutet Mood?</summary><p>Mood beschreibt die eigene Trading-Verfassung zum Zeitpunkt eines Trades. Das Feld unterstützt die spätere Analyse des eigenen Verhaltens und ist von der automatisch ermittelten Setup Quality getrennt.</p></details>
+<details><summary>Was ist Tilt?</summary><p>Tilt bezeichnet im Trading eine ungünstige emotionale oder verhaltensbezogene Handelssituation. VoltDesk kann anhand definierter Kriterien warnen, pausieren oder neue Käufe sperren.</p></details>
+<details><summary>Was ist der Kill Switch?</summary><p>Der Kill Switch ist eine zentrale Sicherheitsfunktion, mit der der Trading-Betrieb gestoppt werden kann. Er dient als letzte Eskalationsstufe der Trading-Governance.</p></details>
+<details><summary>Was ist das Daily Loss Limit?</summary><p>Das Daily Loss Limit begrenzt den zulässigen Tagesverlust. Wird die Grenze erreicht, können weitere Käufe blockiert werden.</p></details>
+<details><summary>Was ist Auto-Close?</summary><p>Auto-Close schließt Positionen entsprechend den hinterlegten Regeln vor dem relevanten Handelsschluss. Die Marktregion des Titels wird dabei berücksichtigt.</p></details>
+<details><summary>Was ist ein Gap-Stop?</summary><p>Der Gap-Stop ist eine Schutzregel für starke Kurslücken. Er berücksichtigt, dass ein Kurs bei der nächsten verfügbaren Notierung deutlich vom vorherigen Niveau abweichen kann.</p></details>
+<details><summary>Was bedeutet KO?</summary><p>KO steht für Knock-Out. Bei einem Hebelprodukt bezeichnet die KO-Schwelle das Niveau, bei dessen Erreichen die Knock-Out-Eigenschaft ausgelöst werden kann.</p></details>
+<details><summary>Was zeigt der Chart?</summary><p>Der Fokus-Chart stellt die Kursentwicklung und relevante Analyseinformationen grafisch dar. Je nach Ansicht können VWAP, Volumen, ATR sowie Markt- oder Sektorbezüge sichtbar sein.</p></details>
+<details><summary>Was ist VWAP?</summary><p>VWAP steht für Volume Weighted Average Price. Der volumengewichtete Durchschnittspreis dient als Referenz für die Kursentwicklung.</p></details>
+<details><summary>Was ist ATR?</summary><p>ATR steht für Average True Range. Der Indikator beschreibt die typische Schwankungsbreite eines Titels und wird unter anderem für Stop-Berechnungen verwendet.</p></details>
+<details><summary>Was ist die Event-Uhr?</summary><p>Die Event-Uhr bündelt zeitkritische Informationen, beispielsweise Earnings, Insider-Aktivitäten und relevante Markttermine.</p></details>
+<details><summary>Was ist Telegram Push?</summary><p>Telegram Push ist eine Pro-Funktion für kritische Trading-Ereignisse wie Stop, Take-Profit, Knock-Out, Gap-Stop, Auto-Close, Daily Loss Limit und Kill Switch.</p></details>
+<details><summary>Überwacht Telegram VoltDesk rund um die Uhr?</summary><p>Nein. In der aktuellen Architektur werden Telegram-Nachrichten von der laufenden VoltDesk-Anwendung ausgelöst. Telegram ersetzt keinen permanent laufenden Trading-Server und keinen Broker-Alarmdienst.</p></details>
+<details><summary>Welche Reports gibt es?</summary><p>VoltDesk kann Tages-, Wochen-, Monats- und Jahresauswertungen bereitstellen.</p></details>
+<details><summary>Was ist Backtesting?</summary><p>Beim Backtesting wird eine Strategie anhand historischer Marktdaten simuliert. Historische Ergebnisse sind keine Garantie für zukünftige Ergebnisse.</p></details>
+<details><summary>Was ist der Unterschied zwischen P&amp;L und Gebühren?</summary><p>P&amp;L beschreibt Gewinn oder Verlust. Gebühren sind separat ausgewiesene Handelskosten; beim Netto-P&amp;L werden sie berücksichtigt.</p></details>
+<details><summary>Warum können offene Trades mit 0 € P&amp;L erscheinen?</summary><p>Ein noch nicht geschlossener Paper Trade hat noch keinen realisierten Gewinn oder Verlust.</p></details>
+<details><summary>Wie aktuell sind die Marktdaten?</summary><p>Aktualität und Verfügbarkeit hängen von Datenquelle, Markt und Netzwerk ab. VoltDesk garantiert keine unterbrechungsfreie oder tickgenaue Datenversorgung.</p></details>
+<details><summary>Ist VoltDesk Anlageberatung?</summary><p>Nein. VoltDesk stellt Informationen, Analysen und strukturierte Entscheidungshilfen bereit und ersetzt keine individuelle Anlage-, Rechts- oder Steuerberatung.</p></details>
+<details><summary>Was passiert bei einem Daten- oder API-Ausfall?</summary><p>Externe Daten können ausfallen, verzögert eintreffen oder unvollständig sein. Die Anwendung ist deshalb nicht als alleinige Grundlage für reale Handelsentscheidungen gedacht.</p></details>
+</section>
+<section class="contact-card" id="frage"><div class="section-kicker">NOCH EINE FRAGE?</div><h2>Frag uns direkt.</h2><p>Beschreibe dein Problem oder deine Frage möglichst konkret. Mit dem Button wird eine E-Mail an <strong>kaisersoft.ai@gmail.com</strong> vorbereitet.</p><form onsubmit="sendQuestion(event)"><label for="question">Deine Frage</label><textarea id="question" name="question" rows="6" required placeholder="Zum Beispiel: Wie funktioniert der automatische Take-Profit im OPEN-Modus?"></textarea><button class="btn" type="submit">Frage per E-Mail senden <span>→</span></button></form></section></main>
 <footer><span>© <a href="http://www.kaisersoft.global">kaisersoft.ai</a> · <a href="./impressum.html">Impressum</a> · <a href="./agb.html">AGB</a> · <a href="./datenschutz.html">Datenschutz</a></span><span>Professional Trading Intelligence · Paper Trading</span></footer>
-<script>
-function sendQuestion(event){
-  event.preventDefault();
-  const q=document.getElementById('question').value.trim();
-  if(!q)return;
-  const subject=encodeURIComponent('VoltDesk Frage');
-  const body=encodeURIComponent(q+'\n\n---\nGesendet über die VoltDesk FAQ.');
-  window.location.href='mailto:kaisersoft.ai@gmail.com?subject='+subject+'&body='+body;
-}
-</script>
-</body>
-</html>
+<script>function sendQuestion(event){event.preventDefault();const q=document.getElementById('question').value.trim();if(!q)return;const subject=encodeURIComponent('VoltDesk Frage');const body=encodeURIComponent(q+'\n\n---\nGesendet über die VoltDesk FAQ.');window.location.href='mailto:kaisersoft.ai@gmail.com?subject='+subject+'&body='+body;}</script>
+</body></html>
