@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kaisersoft.github.io/website/voltdesk-landingpage/sitemap.xml
