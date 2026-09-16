@@ -39,58 +39,68 @@ jobs:
 
           root = Path("voltdesk-landingpage")
 
-          # Canonical navigation used on every normal VoltDesk landing-page HTML file.
           canonical_nav = '''<nav><a href="./why-voltdesk.html">Warum VoltDesk</a><a href="./toolstack.html">Toolstack</a><a href="./features.html">Features</a><a href="./how-it-works.html">So funktioniert es</a><a href="./faq.html">FAQ</a><a href="./hilfe.html">Hilfe</a><a href="./index.html#pricing">Preise</a><a href="./withdrawal.html">Widerrufsrecht</a></nav>'''
 
-          # Normalize every page that already uses the standard .nav header.
-          # This fixes missing links and keeps the order identical everywhere.
           for path in root.glob("*.html"):
               if path.name in {"features.html", "feature-comparison.html"}:
                   continue
               text = path.read_text(encoding="utf-8")
-              updated = re.sub(
-                  r"<nav\b[^>]*>.*?</nav>",
-                  canonical_nav,
-                  text,
-                  count=1,
-                  flags=re.I | re.S
-              )
+              updated = re.sub(r"<nav\b[^>]*>.*?</nav>", canonical_nav, text, count=1, flags=re.I | re.S)
               if updated != text:
                   path.write_text(updated, encoding="utf-8")
 
-          # Restore the known-good 13-column matrix whenever QuantConnect is missing.
-          # The reference commit is fetched explicitly because actions/checkout uses a shallow clone.
           path = root / "features.html"
           text = path.read_text(encoding="utf-8")
           header_match = re.search(r"<thead>.*?</thead>", text, flags=re.S | re.I)
           if not header_match or "QuantConnect" not in header_match.group(0):
               subprocess.run(["git", "fetch", "--no-tags", "--depth=1", "origin", "35ff30c1476229797f2c110991c3cece8479ab03"], check=True)
-              text = subprocess.check_output([
-                  "git", "show", "35ff30c1476229797f2c110991c3cece8479ab03:voltdesk-landingpage/features.html"
-              ], text=True).replace("\r\n", "\n")
+              text = subprocess.check_output(["git", "show", "35ff30c1476229797f2c110991c3cece8479ab03:voltdesk-landingpage/features.html"], text=True).replace("\r\n", "\n")
 
-          text = text.replace(
-              '<td class="price">Paid / Custom<span class="plan">Research &amp; Trading</span></td>',
-              '<td class="price">$84/Monat<span class="plan">Quant Researcher</span></td>'
-          )
+          text = text.replace('<td class="price">Paid / Custom<span class="plan">Research &amp; Trading</span></td>', '<td class="price">$84/Monat<span class="plan">Quant Researcher</span></td>')
 
           table_match = re.search(r"(<div class=\"matrix-wrap\"><table>)(.*?)(</table>)", text, flags=re.S)
           if not table_match:
               raise SystemExit("Features matrix table not found")
           table = table_match.group(2)
 
-          # Final order by displayed monthly price, with VoltDesk kept first.
-          # VoltDesk, thinkorswim, Sentry, Finviz, Neura, Stock Rover,
-          # TradingView, Koyfin, QuantConnect, TrendSpider, TC2000, Trade Ideas.
-          desired = [0,1,2,3,4,5,6,7,11,10,12,8,9]
+          header = re.search(r"<thead>.*?</thead>", table, flags=re.S | re.I)
+          hrow = re.search(r"<tr\b[^>]*>.*?</tr>", header.group(0), flags=re.S | re.I)
+          hcells = re.findall(r"<th\b[^>]*>.*?</th>", hrow.group(0), flags=re.S | re.I)
+          if len(hcells) not in {12, 13}:
+              raise SystemExit(f"Expected 12 or 13 header cells, found {len(hcells)}")
+
+          # Remove thinkorswim from the published matrix. Its $0 access is tied to a Schwab account.
+          if len(hcells) == 13:
+              keep = [i for i, cell in enumerate(hcells) if "thinkorswim" not in re.sub(r"<.*?>", "", cell, flags=re.S | re.I).strip().lower()]
+              if len(keep) != 12:
+                  raise SystemExit("Could not identify exactly one thinkorswim header cell")
+              new_hrow = "<tr>" + "".join(hcells[i] for i in keep) + "</tr>"
+              table = table.replace(header.group(0), header.group(0).replace(hrow.group(0), new_hrow))
+              body_match = re.search(r"<tbody>.*?</tbody>", table, flags=re.S | re.I)
+              body = body_match.group(0)
+
+              def remove_thinkorswim(m):
+                  row = m.group(0)
+                  cells = re.findall(r"<td\b[^>]*>.*?</td>", row, flags=re.S | re.I)
+                  if len(cells) != 13:
+                      raise SystemExit(f"Expected 13 body cells before thinkorswim removal, found {len(cells)}")
+                  attrs = re.match(r"<tr\b([^>]*)>", row, flags=re.S | re.I).group(1)
+                  return f"<tr{attrs}>" + "".join(cells[i] for i in keep) + "</tr>"
+
+              body = re.sub(r"<tr\b[^>]*>.*?</tr>", remove_thinkorswim, body, flags=re.S | re.I)
+              table = table.replace(body_match.group(0), body)
+
+          # Final order: VoltDesk first, then ascending displayed monthly price.
+          # VoltDesk, Sentry, Finviz, Neura, Stock Rover, TradingView,
+          # Koyfin, QuantConnect, TrendSpider, TC2000, Trade Ideas.
+          desired = list(range(12))
 
           header = re.search(r"<thead>.*?</thead>", table, flags=re.S | re.I)
           hrow = re.search(r"<tr\b[^>]*>.*?</tr>", header.group(0), flags=re.S | re.I)
           hcells = re.findall(r"<th\b[^>]*>.*?</th>", hrow.group(0), flags=re.S | re.I)
-          if len(hcells) != 13:
-              raise SystemExit(f"Expected 13 header cells, found {len(hcells)}")
-          new_hrow = "<tr>" + "".join(hcells[i] for i in desired) + "</tr>"
-          table = table.replace(header.group(0), header.group(0).replace(hrow.group(0), new_hrow))
+          if len(hcells) != 12:
+              raise SystemExit(f"Expected 12 header cells after thinkorswim removal, found {len(hcells)}")
+          table = table.replace(header.group(0), header.group(0).replace(hrow.group(0), "<tr>" + "".join(hcells[i] for i in desired) + "</tr>"))
 
           body_match = re.search(r"<tbody>.*?</tbody>", table, flags=re.S | re.I)
           body = body_match.group(0)
@@ -98,8 +108,8 @@ jobs:
           def reorder_body_row(m):
               row = m.group(0)
               cells = re.findall(r"<td\b[^>]*>.*?</td>", row, flags=re.S | re.I)
-              if len(cells) != 13:
-                  raise SystemExit(f"Expected 13 body cells, found {len(cells)}")
+              if len(cells) != 12:
+                  raise SystemExit(f"Expected 12 body cells, found {len(cells)}")
               attrs = re.match(r"<tr\b([^>]*)>", row, flags=re.S | re.I).group(1)
               return f"<tr{attrs}>" + "".join(cells[i] for i in desired) + "</tr>"
 
@@ -114,7 +124,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add voltdesk-landingpage .github/workflows/deploy-voltdesk-landingpage.yml
           if ! git diff --cached --quiet; then
-            git commit -m "Normalize VoltDesk landing page navigation"
+            git commit -m "Update VoltDesk feature comparison"
             git push
           fi
 
@@ -137,4 +147,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        
