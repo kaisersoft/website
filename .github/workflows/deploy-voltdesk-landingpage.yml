@@ -82,7 +82,7 @@ jobs:
           # Final order by displayed monthly price, with VoltDesk kept first.
           # VoltDesk, thinkorswim, Sentry, Finviz, Neura, Stock Rover,
           # TradingView, Koyfin, QuantConnect, TrendSpider, TC2000, Trade Ideas.
-          desired = [0,1,2,3,4,5,6,7,12,8,9,10,11]
+          desired = [0,1,2,3,4,5,6,7,11,10,12,8,9]
 
           header = re.search(r"<thead>.*?</thead>", table, flags=re.S | re.I)
           hrow = re.search(r"<tr\b[^>]*>.*?</tr>", header.group(0), flags=re.S | re.I)
@@ -137,3 +137,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        
