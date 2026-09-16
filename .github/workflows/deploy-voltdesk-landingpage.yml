@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -29,6 +29,99 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Update VoltDesk navigation and feature matrix
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          root = Path("voltdesk-landingpage")
+
+          # Add the Features link to every existing landing-page HTML file.
+          for path in root.glob("*.html"):
+              if path.name == "features.html":
+                  continue
+              text = path.read_text(encoding="utf-8")
+              if "./features.html" in text:
+                  continue
+
+              updated = text
+              nav_match = re.search(r"(<nav\b[^>]*>)(.*?)(</nav>)", updated, flags=re.I | re.S)
+              if nav_match:
+                  link = '\n    <a href="./features.html">Features</a>'
+                  updated = updated[:nav_match.end(2)] + link + updated[nav_match.end(2):]
+              else:
+                  header_match = re.search(r"(<header\b[^>]*>)(.*?)(</header>)", updated, flags=re.I | re.S)
+                  if header_match:
+                      link = '<a class="back" href="./features.html">Features</a>'
+                      updated = updated[:header_match.end(2)] + link + updated[header_match.end(2):]
+                  else:
+                      body_match = re.search(r"<body[^>]*>", updated, flags=re.I)
+                      if body_match:
+                          link = '\n<nav style="padding:16px 24px;text-align:right"><a href="./features.html">Features</a></nav>'
+                          updated = updated[:body_match.end()] + link + updated[body_match.end():]
+
+              if updated != text:
+                  path.write_text(updated, encoding="utf-8")
+
+          # Reorder the Features matrix by displayed monthly paid-plan price.
+          # QuantConnect is shown at $84/month (Quant Researcher), before TrendSpider.
+          path = root / "features.html"
+          text = path.read_text(encoding="utf-8")
+          text = text.replace(
+              '<td class="price">Paid / Custom<span class="plan">Research &amp; Trading</span></td>',
+              '<td class="price">$84/Monat<span class="plan">Quant Researcher</span></td>'
+          )
+
+          table_match = re.search(r"(<div class=\"matrix-wrap\"><table>)(.*?)(</table>)", text, flags=re.S)
+          if not table_match:
+              raise SystemExit("Features matrix table not found")
+          table = table_match.group(2)
+
+          # Current: VoltDesk, thinkorswim, Sentry, Finviz, Neura, Stock Rover,
+          # TradingView, Koyfin, TrendSpider, TC2000, Trade Ideas, QuantConnect.
+          # New:      VoltDesk, thinkorswim, Sentry, Finviz, Neura, Stock Rover,
+          # TradingView, Koyfin, QuantConnect, TrendSpider, TC2000, Trade Ideas.
+          desired = [0,1,2,3,4,5,6,7,11,8,9,10]
+
+          header = re.search(r"<thead>.*?</thead>", table, flags=re.S | re.I)
+          if not header:
+              raise SystemExit("Features table header not found")
+          hrow = re.search(r"<tr\b[^>]*>.*?</tr>", header.group(0), flags=re.S | re.I)
+          hcells = re.findall(r"<th\b[^>]*>.*?</th>", hrow.group(0), flags=re.S | re.I)
+          if len(hcells) == 13:
+              new_hrow = "<tr>" + "".join(hcells[i] for i in desired) + "</tr>"
+              table = table.replace(header.group(0), header.group(0).replace(hrow.group(0), new_hrow))
+
+          body_match = re.search(r"<tbody>.*?</tbody>", table, flags=re.S | re.I)
+          if not body_match:
+              raise SystemExit("Features table body not found")
+          body = body_match.group(0)
+
+          def reorder_body_row(m):
+              row = m.group(0)
+              cells = re.findall(r"<td\b[^>]*>.*?</td>", row, flags=re.S | re.I)
+              if len(cells) != 13:
+                  return row
+              attrs = re.match(r"<tr\b([^>]*)>", row, flags=re.S | re.I).group(1)
+              return f"<tr{attrs}>" + "".join(cells[i] for i in desired) + "</tr>"
+
+          new_body = re.sub(r"<tr\b[^>]*>.*?</tr>", reorder_body_row, body, flags=re.S | re.I)
+          table = table.replace(body, new_body)
+          path.write_text(text[:table_match.start(2)] + table + text[table_match.end(2):], encoding="utf-8")
+
+      - name: Commit site updates and remove temporary updater
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -f .github/workflows/voltdesk-live-nav-update.yml 2>/dev/null || true
+          git add voltdesk-landingpage .github/workflows/deploy-voltdesk-landingpage.yml
+          if ! git diff --cached --quiet; then
+            git commit -m "Update VoltDesk features pricing and site navigation"
+            git push
+          fi
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
