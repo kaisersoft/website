@@ -35,6 +35,7 @@ jobs:
         run: |
           from pathlib import Path
           import re
+          import subprocess
 
           root = Path("voltdesk-landingpage")
 
@@ -45,7 +46,6 @@ jobs:
               text = path.read_text(encoding="utf-8")
               if "./features.html" in text:
                   continue
-
               updated = text
               nav_match = re.search(r"(<nav\b[^>]*>)(.*?)(</nav>)", updated, flags=re.I | re.S)
               if nav_match:
@@ -61,14 +61,19 @@ jobs:
                       if body_match:
                           link = '\n<nav style="padding:16px 24px;text-align:right"><a href="./features.html">Features</a></nav>'
                           updated = updated[:body_match.end()] + link + updated[body_match.end():]
-
               if updated != text:
                   path.write_text(updated, encoding="utf-8")
 
-          # Reorder the Features matrix by displayed monthly paid-plan price.
-          # QuantConnect is shown at $84/month (Quant Researcher), before TrendSpider.
+          # Recover the last known-good feature matrix if an earlier automation
+          # accidentally dropped the QuantConnect column, then apply the final order.
           path = root / "features.html"
           text = path.read_text(encoding="utf-8")
+          header_text = re.search(r"<thead>.*?</thead>", text, flags=re.S | re.I)
+          if not header_text or "QuantConnect" not in header_text.group(0):
+              text = subprocess.check_output([
+                  "git", "show", "35ff30c1476229797f2c110991c3cece8479ab03:voltdesk-landingpage/features.html"
+              ], text=True).replace("\r\n", "\n")
+
           text = text.replace(
               '<td class="price">Paid / Custom<span class="plan">Research &amp; Trading</span></td>',
               '<td class="price">$84/Monat<span class="plan">Quant Researcher</span></td>'
@@ -79,31 +84,27 @@ jobs:
               raise SystemExit("Features matrix table not found")
           table = table_match.group(2)
 
-          # Current: VoltDesk, thinkorswim, Sentry, Finviz, Neura, Stock Rover,
-          # TradingView, Koyfin, TrendSpider, TC2000, Trade Ideas, QuantConnect.
-          # New:      VoltDesk, thinkorswim, Sentry, Finviz, Neura, Stock Rover,
+          # Final order by displayed monthly price, with VoltDesk kept first:
+          # VoltDesk, thinkorswim, Sentry, Finviz, Neura, Stock Rover,
           # TradingView, Koyfin, QuantConnect, TrendSpider, TC2000, Trade Ideas.
-          desired = [0,1,2,3,4,5,6,7,11,8,9,10]
+          desired = [0,1,2,3,4,5,6,7,12,8,9,10,11]
 
           header = re.search(r"<thead>.*?</thead>", table, flags=re.S | re.I)
-          if not header:
-              raise SystemExit("Features table header not found")
           hrow = re.search(r"<tr\b[^>]*>.*?</tr>", header.group(0), flags=re.S | re.I)
           hcells = re.findall(r"<th\b[^>]*>.*?</th>", hrow.group(0), flags=re.S | re.I)
-          if len(hcells) == 13:
-              new_hrow = "<tr>" + "".join(hcells[i] for i in desired) + "</tr>"
-              table = table.replace(header.group(0), header.group(0).replace(hrow.group(0), new_hrow))
+          if len(hcells) != 13:
+              raise SystemExit(f"Expected 13 header cells, found {len(hcells)}")
+          new_hrow = "<tr>" + "".join(hcells[i] for i in desired) + "</tr>"
+          table = table.replace(header.group(0), header.group(0).replace(hrow.group(0), new_hrow))
 
           body_match = re.search(r"<tbody>.*?</tbody>", table, flags=re.S | re.I)
-          if not body_match:
-              raise SystemExit("Features table body not found")
           body = body_match.group(0)
 
           def reorder_body_row(m):
               row = m.group(0)
               cells = re.findall(r"<td\b[^>]*>.*?</td>", row, flags=re.S | re.I)
               if len(cells) != 13:
-                  return row
+                  raise SystemExit(f"Expected 13 body cells, found {len(cells)}")
               attrs = re.match(r"<tr\b([^>]*)>", row, flags=re.S | re.I).group(1)
               return f"<tr{attrs}>" + "".join(cells[i] for i in desired) + "</tr>"
 
@@ -111,15 +112,14 @@ jobs:
           table = table.replace(body, new_body)
           path.write_text(text[:table_match.start(2)] + table + text[table_match.end(2):], encoding="utf-8")
 
-      - name: Commit site updates and remove temporary updater
+      - name: Commit site updates
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm -f .github/workflows/voltdesk-live-nav-update.yml 2>/dev/null || true
           git add voltdesk-landingpage .github/workflows/deploy-voltdesk-landingpage.yml
           if ! git diff --cached --quiet; then
-            git commit -m "Update VoltDesk features pricing and site navigation"
+            git commit -m "Fix VoltDesk feature matrix order and pricing"
             git push
           fi
 
