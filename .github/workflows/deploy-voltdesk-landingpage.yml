@@ -64,12 +64,12 @@ jobs:
               if updated != text:
                   path.write_text(updated, encoding="utf-8")
 
-          # Recover the last known-good feature matrix if an earlier automation
-          # accidentally dropped the QuantConnect column, then apply the final order.
+          # Restore the known-good 13-column matrix whenever QuantConnect is missing.
+          # This prevents the automation from silently dropping the last column.
           path = root / "features.html"
           text = path.read_text(encoding="utf-8")
-          header_text = re.search(r"<thead>.*?</thead>", text, flags=re.S | re.I)
-          if not header_text or "QuantConnect" not in header_text.group(0):
+          header_match = re.search(r"<thead>.*?</thead>", text, flags=re.S | re.I)
+          if not header_match or "QuantConnect" not in header_match.group(0):
               text = subprocess.check_output([
                   "git", "show", "35ff30c1476229797f2c110991c3cece8479ab03:voltdesk-landingpage/features.html"
               ], text=True).replace("\r\n", "\n")
@@ -84,7 +84,7 @@ jobs:
               raise SystemExit("Features matrix table not found")
           table = table_match.group(2)
 
-          # Final order by displayed monthly price, with VoltDesk kept first:
+          # Final order by displayed monthly price, with VoltDesk kept first.
           # VoltDesk, thinkorswim, Sentry, Finviz, Neura, Stock Rover,
           # TradingView, Koyfin, QuantConnect, TrendSpider, TC2000, Trade Ideas.
           desired = [0,1,2,3,4,5,6,7,12,8,9,10,11]
