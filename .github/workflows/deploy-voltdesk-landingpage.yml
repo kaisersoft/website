@@ -30,7 +30,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Update VoltDesk navigation and feature matrix
+      - name: Normalize VoltDesk navigation and feature matrix
         shell: python
         run: |
           from pathlib import Path
@@ -39,28 +39,22 @@ jobs:
 
           root = Path("voltdesk-landingpage")
 
-          # Add the Features link to every existing landing-page HTML file.
+          # Canonical navigation used on every normal VoltDesk landing-page HTML file.
+          canonical_nav = '''<nav><a href="./why-voltdesk.html">Warum VoltDesk</a><a href="./toolstack.html">Toolstack</a><a href="./features.html">Features</a><a href="./how-it-works.html">So funktioniert es</a><a href="./faq.html">FAQ</a><a href="./hilfe.html">Hilfe</a><a href="./index.html#pricing">Preise</a><a href="./withdrawal.html">Widerrufsrecht</a></nav>'''
+
+          # Normalize every page that already uses the standard .nav header.
+          # This fixes missing links and keeps the order identical everywhere.
           for path in root.glob("*.html"):
-              if path.name == "features.html":
+              if path.name in {"features.html", "feature-comparison.html"}:
                   continue
               text = path.read_text(encoding="utf-8")
-              if "./features.html" in text:
-                  continue
-              updated = text
-              nav_match = re.search(r"(<nav\b[^>]*>)(.*?)(</nav>)", updated, flags=re.I | re.S)
-              if nav_match:
-                  link = '\n    <a href="./features.html">Features</a>'
-                  updated = updated[:nav_match.end(2)] + link + updated[nav_match.end(2):]
-              else:
-                  header_match = re.search(r"(<header\b[^>]*>)(.*?)(</header>)", updated, flags=re.I | re.S)
-                  if header_match:
-                      link = '<a class="back" href="./features.html">Features</a>'
-                      updated = updated[:header_match.end(2)] + link + updated[header_match.end(2):]
-                  else:
-                      body_match = re.search(r"<body[^>]*>", updated, flags=re.I)
-                      if body_match:
-                          link = '\n<nav style="padding:16px 24px;text-align:right"><a href="./features.html">Features</a></nav>'
-                          updated = updated[:body_match.end()] + link + updated[body_match.end():]
+              updated = re.sub(
+                  r"<nav\b[^>]*>.*?</nav>",
+                  canonical_nav,
+                  text,
+                  count=1,
+                  flags=re.I | re.S
+              )
               if updated != text:
                   path.write_text(updated, encoding="utf-8")
 
@@ -119,7 +113,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add voltdesk-landingpage .github/workflows/deploy-voltdesk-landingpage.yml
           if ! git diff --cached --quiet; then
-            git commit -m "Fix VoltDesk feature matrix order and pricing"
+            git commit -m "Normalize VoltDesk landing page navigation"
             git push
           fi
 
@@ -132,7 +126,7 @@ jobs:
           cp index.html _site/
           cp -R css _site/
           cp -R js _site/
-          cp -R voltdesk-landingpage _site/
+          cp -R voltdesk-landingpage _site
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
