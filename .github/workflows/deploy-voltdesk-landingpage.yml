@@ -59,11 +59,12 @@ jobs:
                   path.write_text(updated, encoding="utf-8")
 
           # Restore the known-good 13-column matrix whenever QuantConnect is missing.
-          # This prevents the automation from silently dropping the last column.
+          # The reference commit is fetched explicitly because actions/checkout uses a shallow clone.
           path = root / "features.html"
           text = path.read_text(encoding="utf-8")
           header_match = re.search(r"<thead>.*?</thead>", text, flags=re.S | re.I)
           if not header_match or "QuantConnect" not in header_match.group(0):
+              subprocess.run(["git", "fetch", "--no-tags", "--depth=1", "origin", "35ff30c1476229797f2c110991c3cece8479ab03"], check=True)
               text = subprocess.check_output([
                   "git", "show", "35ff30c1476229797f2c110991c3cece8479ab03:voltdesk-landingpage/features.html"
               ], text=True).replace("\r\n", "\n")
