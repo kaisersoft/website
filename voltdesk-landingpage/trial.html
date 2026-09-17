@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="VoltDesk Trial – 14 Tage alle Pro-Funktionen testen. Paper Trading, Risk Engine, Analytics, Backtesting, Heatmap und mehr.">
+<title>VoltDesk Trial — 14 Tage Pro testen</title>
+<link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/kaisersoft/assets/main/favicon.svg">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#05080f;--panel:#0b1220;--line:rgba(255,255,255,.09);--muted:#94a3b8;--cyan:#00d9ff;--green:#38e6a5;--purple:#a970ff;--white:#f5f8fc}
+html{scroll-behavior:smooth}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% 0%,#10243b 0,#07101b 34%,var(--bg) 72%);color:var(--white);min-height:100vh;line-height:1.5}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;background-image:linear-gradient(rgba(0,217,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(0,217,255,.08) 1px,transparent 1px);background-size:70px 70px;mask-image:linear-gradient(to bottom,black,transparent 75%)}
+a{color:inherit;text-decoration:none}
+.nav{position:relative;z-index:2;max-width:1180px;margin:auto;padding:24px 22px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{font-weight:900;letter-spacing:.08em;font-size:1.15rem}.brand span{color:var(--cyan)}.nav-links{display:flex;gap:22px;color:#aebbd0;font-size:.9rem}.nav-links a:hover{color:#fff}.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:999px;padding:12px 21px;font-weight:800;border:1px solid rgba(0,217,255,.55);background:rgba(0,217,255,.1);color:#fff;transition:.2s}.btn:hover{background:var(--cyan);color:#031018;box-shadow:0 0 30px rgba(0,217,255,.22)}.btn.primary{background:linear-gradient(135deg,#19dfff,#26e5a6);border:0;color:#031018;box-shadow:0 0 35px rgba(0,217,255,.16)}
+.hero{position:relative;z-index:1;max-width:980px;margin:55px auto 45px;padding:0 22px;text-align:center}.eyebrow{display:inline-block;color:var(--cyan);font-size:.74rem;letter-spacing:.18em;font-weight:900;margin-bottom:16px}.hero h1{font-size:clamp(2.6rem,6vw,5.2rem);line-height:.98;letter-spacing:-.055em}.hero h1 em{font-style:normal;color:var(--cyan)}.hero p{max-width:690px;margin:20px auto;color:#b7c3d4;font-size:1.12rem}.hero-badge{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:8px 14px;border-radius:999px;background:rgba(56,230,165,.1);border:1px solid rgba(56,230,165,.35);color:#7ef0c1;font-size:.82rem;font-weight:800}.hero-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:27px}
+.trial-card{max-width:1180px;margin:0 auto 42px;padding:1px;border-radius:30px;background:linear-gradient(135deg,rgba(0,217,255,.55),rgba(56,230,165,.35),rgba(169,112,255,.5));box-shadow:0 30px 100px rgba(0,0,0,.35)}.trial-inner{background:rgba(6,12,21,.94);border-radius:29px;padding:30px}.trial-head{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:25px}.trial-head h2{font-size:1.65rem}.trial-head p{color:var(--muted);margin-top:4px}.trial-tag{padding:9px 14px;border-radius:12px;background:rgba(56,230,165,.12);color:var(--green);font-weight:900;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.feature{display:flex;gap:13px;padding:17px 18px;border:1px solid var(--line);background:rgba(255,255,255,.025);border-radius:15px}.icon{width:30px;flex:0 0 30px;text-align:center;font-size:1.25rem}.feature h3{font-size:.98rem;margin-bottom:2px}.feature p{font-size:.82rem;color:var(--muted)}
+.compare{max-width:1180px;margin:0 auto;padding:35px 22px 80px}.kicker{text-align:center;color:var(--cyan);font-size:.72rem;font-weight:900;letter-spacing:.17em}.compare h2{text-align:center;font-size:2rem;margin:8px 0 10px}.compare-intro{text-align:center;color:var(--muted);max-width:650px;margin:0 auto 28px}.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:stretch}.plan{border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.025);overflow:hidden}.plan.trial{border-color:rgba(56,230,165,.55);box-shadow:0 0 45px rgba(56,230,165,.08);transform:translateY(-6px)}.plan-head{padding:22px 18px;border-bottom:1px solid var(--line)}.plan-head h3{font-size:1.25rem}.plan-head p{font-size:.8rem;color:var(--muted);min-height:38px;margin-top:5px}.plan.trial .plan-head{background:linear-gradient(180deg,rgba(56,230,165,.12),transparent)}.plan.demo .plan-head{background:linear-gradient(180deg,rgba(148,163,184,.08),transparent)}.plan.free .plan-head{background:linear-gradient(180deg,rgba(0,217,255,.08),transparent)}.plan.pro .plan-head{background:linear-gradient(180deg,rgba(169,112,255,.1),transparent)}.pill{display:inline-block;font-size:.66rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;color:#cbd5e1}.plan.trial .pill{color:var(--green)}.rows{list-style:none}.rows li{min-height:48px;padding:11px 15px;border-bottom:1px solid rgba(255,255,255,.055);font-size:.78rem;color:#cbd5e1}.rows li b{display:block;color:#fff;font-size:.8rem}.rows li span{display:block;color:#748197;font-size:.69rem;margin-top:1px}.yes{color:var(--green)!important}.no{color:#667085!important}.limited{color:#8edfff!important}
+.bottom-cta{max-width:900px;margin:10px auto 70px;padding:36px 24px;text-align:center;border:1px solid rgba(0,217,255,.22);border-radius:26px;background:radial-gradient(circle at 50% 0%,rgba(0,217,255,.11),transparent 65%)}.bottom-cta h2{font-size:2rem}.bottom-cta p{color:var(--muted);margin:8px auto 20px}.fine{font-size:.72rem;color:#5f6b7d;margin-top:14px}.footer{border-top:1px solid var(--line);padding:25px 22px 35px;text-align:center;color:#64748b;font-size:.75rem}.footer a{color:#93a4ba}.footer a:hover{color:#fff}
+@media(max-width:900px){.nav-links{display:none}.plans{grid-template-columns:1fr 1fr}.plan.trial{transform:none}.trial-card{margin-left:14px;margin-right:14px}.compare{padding-left:14px;padding-right:14px}}
+@media(max-width:620px){.grid{grid-template-columns:1fr}.plans{grid-template-columns:1fr}.plan{max-width:520px;margin:auto;width:100%}.trial-inner{padding:22px 16px}.hero{margin-top:35px}.hero h1{font-size:2.75rem}}
+</style>
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="./index.html">VOLT<span>DESK</span></a>
+  <nav class="nav-links">
+    <a href="./index.html#pricing">Preise</a>
+    <a href="./features.html">Features</a>
+    <a href="./faq.html">FAQ</a>
+  </nav>
+  <a class="btn" href="https://voltdesk.streamlit.app">VoltDesk öffnen →</a>
+</header>
+
+<main>
+<section class="hero">
+  <div class="eyebrow">VOLTDESK TRIAL</div>
+  <h1>14 Tage <em>Pro.</em><br>Ohne Kompromisse.</h1>
+  <p>Erlebe VoltDesk mit dem vollständigen Pro-Funktionsumfang. Danach entscheidest du selbst, ob du weitermachen möchtest.</p>
+  <div class="hero-badge">✓ Voller Pro-Zugriff während des Trials</div>
+  <div class="hero-actions">
+    <a class="btn primary" href="https://voltdesk.streamlit.app">Trial starten →</a>
+    <a class="btn" href="./index.html#pricing">Tarife vergleichen</a>
+  </div>
+</section>
+
+<section class="trial-card">
+  <div class="trial-inner">
+    <div class="trial-head">
+      <div><h2>Was du im Trial ausprobieren kannst</h2><p>Kein künstlicher Funktions-Cut: Der Trial soll den echten Pro-Arbeitsplatz zeigen.</p></div>
+      <div class="trial-tag">14 Tage · Pro</div>
+    </div>
+    <div class="grid">
+      <div class="feature"><div class="icon">📊</div><div><h3>Stock Picker & Ranking</h3><p>Aktien systematisch nach Markt- und Setup-Kontext analysieren.</p></div></div>
+      <div class="feature"><div class="icon">📈</div><div><h3>Technische Analyse</h3><p>VWAP, PDH, Volumen und weitere technische Kontexte.</p></div></div>
+      <div class="feature"><div class="icon">🛡️</div><div><h3>Risk Engine</h3><p>Positionsgröße, Stops, Exposure und Trading-Regeln testen.</p></div></div>
+      <div class="feature"><div class="icon">🧠</div><div><h3>Tilt & Trading Discipline</h3><p>Warnungen, Pausen und Lock-Mechanismen gegen impulsives Trading.</p></div></div>
+      <div class="feature"><div class="icon">🗺️</div><div><h3>Heatmap</h3><p>Markt- und Sektorüberblick mit visueller Orientierung.</p></div></div>
+      <div class="feature"><div class="icon">🔬</div><div><h3>Backtesting & Analytics</h3><p>Setups testen, Ergebnisse messen und Trading-Ideen überprüfen.</p></div></div>
+      <div class="feature"><div class="icon">📰</div><div><h3>News & Event-Uhr</h3><p>News, Makro- und Unternehmensereignisse im Trading-Kontext.</p></div></div>
+      <div class="feature"><div class="icon">📲</div><div><h3>Telegram Push</h3><p>Kritische Trading-Ereignisse als Pro-Funktion auf dein Handy.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="compare" id="compare">
+  <div class="kicker">KLARE TRENNUNG</div>
+  <h2>Demo · Free · Trial · Pro</h2>
+  <p class="compare-intro">Die Idee dahinter: Demo zum Kennenlernen, Free für den dauerhaften Einstieg, Trial zum vollständigen Testen und Pro für den kompletten Trading-Arbeitsplatz.</p>
+  <div class="plans">
+    <article class="plan demo">
+      <div class="plan-head"><div class="pill">Ohne Registrierung</div><h3>Demo</h3><p>VoltDesk kennenlernen und den Workflow verstehen.</p></div>
+      <ul class="rows">
+        <li><b>Paper Trading</b><span class="limited">Beispiel / begrenzt</span></li>
+        <li><b>Marktübersicht</b><span class="yes">✓ Vorschau</span></li>
+        <li><b>Stock Picker / Ranking</b><span>Vorschau</span></li>
+        <li><b>Risk Engine</b><span>Erklärung / Vorschau</span></li>
+        <li><b>Analytics & Backtesting</b><span class="no">Nicht verfügbar</span></li>
+        <li><b>Telegram / Reports</b><span class="no">Nicht verfügbar</span></li>
+      </ul>
+    </article>
+    <article class="plan free">
+      <div class="plan-head"><div class="pill">Kostenlos</div><h3>Free</h3><p>Ein echter, dauerhaft kostenloser Einstieg mit begrenztem Umfang.</p></div>
+      <ul class="rows">
+        <li><b>Paper Trading</b><span class="yes">✓ Bis 50 Trades / Monat</span></li>
+        <li><b>Watchlist & Marktübersicht</b><span class="yes">✓ Basis</span></li>
+        <li><b>Technische Analyse</b><span class="limited">Basis-Indikatoren</span></li>
+        <li><b>Risk Engine</b><span class="limited">Basis</span></li>
+        <li><b>Analytics & Backtesting</b><span class="limited">Begrenzt</span></li>
+        <li><b>Telegram / Reports / Export</b><span class="no">Nicht verfügbar</span></li>
+      </ul>
+    </article>
+    <article class="plan trial">
+      <div class="plan-head"><div class="pill">14 Tage Vollzugriff</div><h3>Trial</h3><p>Der vollständige Pro-Funktionsumfang zum realistischen Ausprobieren.</p></div>
+      <ul class="rows">
+        <li><b>Paper Trading</b><span class="yes">✓ Unbegrenzt</span></li>
+        <li><b>Picker, Ranking & Heatmap</b><span class="yes">✓ Vollständig</span></li>
+        <li><b>Risk & Trading Governance</b><span class="yes">✓ Vollständig</span></li>
+        <li><b>Analytics & Backtesting</b><span class="yes">✓ Vollständig</span></li>
+        <li><b>News & Event-Uhr</b><span class="yes">✓ Vollständig</span></li>
+        <li><b>Telegram / Reports / Export</b><span class="yes">✓ Pro-Funktionen</span></li>
+      </ul>
+    </article>
+    <article class="plan pro">
+      <div class="plan-head"><div class="pill">Vollständiger Arbeitsplatz</div><h3>Pro</h3><p>Alle Funktionen für Trader, die VoltDesk dauerhaft nutzen.</p></div>
+      <ul class="rows">
+        <li><b>Paper Trading</b><span class="yes">✓ Unbegrenzt</span></li>
+        <li><b>Alle Analyse-Tools</b><span class="yes">✓ Vollständig</span></li>
+        <li><b>Risk & Trading Governance</b><span class="yes">✓ Vollständig</span></li>
+        <li><b>Analytics & Backtesting</b><span class="yes">✓ Vollständig</span></li>
+        <li><b>Telegram & Reports</b><span class="yes">✓ Vollständig</span></li>
+        <li><b>Preis</b><span>9,90 € / Monat · 99 € / Jahr</span></li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section class="bottom-cta">
+  <h2>Bereit, VoltDesk wirklich zu testen?</h2>
+  <p>Starte den Trial direkt in VoltDesk und erlebe den vollständigen Pro-Arbeitsplatz.</p>
+  <a class="btn primary" href="https://voltdesk.streamlit.app">14 Tage Pro testen →</a>
+  <div class="fine">VoltDesk ist eine Paper-Trading- und Decision-Support-Anwendung und keine Anlageberatung.</div>
+</section>
+</main>
+
+<footer class="footer">
+  © <a href="http://www.kaisersoft.global">kaisersoft.ai</a> · <a href="./impressum.html">Impressum</a> · <a href="./agb.html">AGB</a> · <a href="./datenschutz.html">Datenschutz</a>
+</footer>
+</body>
+</html>
