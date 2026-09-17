@@ -14,16 +14,13 @@ Small internal Streamlit frontend for Runware image-to-video generation.
 - Optional 24 fps post-processing for models without native 24 fps output
 - MP4 preview and download
 - Runware cost shown when returned by the API
+- API key entered directly in the GUI; no repository secret is required
 
-## Streamlit Secrets
+## API key
 
-Create a Streamlit secret named:
+Enter your own Runware API key in the password field when the app starts.
 
-```toml
-RUNWARE_API_KEY = "your-runware-api-key"
-```
-
-Do not commit the real API key to GitHub.
+The key is not stored in GitHub, Streamlit Secrets, or a project configuration file. It is used only during the current Streamlit session for requests to Runware.
 
 ## Run locally
 
@@ -37,6 +34,6 @@ The app requires Python 3.11+ for the current Runware SDK.
 
 ## Deployment
 
-Deploy `runware-video/app.py` as its own Streamlit app. The repository can remain the public website repository; the Streamlit app uses only the files inside this folder.
+Deploy `runware-video/app.py` as its own Streamlit app. The repository can remain the public Kaisersoft website repository; the Streamlit app uses only the files inside this folder.
 
-Runware's Python SDK supports REST transport for one-off generation requests and async delivery/polling for video jobs. Input images can be sent as data URIs/base64, so the app does not need a separate image-storage service.
+Each user supplies their own Runware API key in the GUI. This prevents the public Streamlit deployment from consuming a centrally stored Kaisersoft Runware balance.
