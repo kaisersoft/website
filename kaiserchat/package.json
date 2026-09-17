@@ -1,0 +1,16 @@
+{
+  "name": "kaiserchat-prototype",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Minimal KaiserChat prototype with a server-side OpenAI API endpoint.",
+  "type": "module",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "openai": "^6.8.0"
+  },
+  "devDependencies": {
+    "vercel": "latest"
+  }
+}

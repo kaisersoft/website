@@ -1,0 +1,99 @@
+:root {
+  color-scheme: dark;
+  --bg: #020307;
+  --panel: rgba(7, 10, 18, .72);
+  --line: rgba(255,255,255,.12);
+  --text: #f5f7ff;
+  --muted: rgba(231,235,255,.55);
+  --accent: #a78bfa;
+  --accent2: #60a5fa;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+}
+
+#stars { position: fixed; inset: 0; width: 100%; height: 100%; opacity: .9; }
+.space-glow {
+  position: fixed; inset: 0; pointer-events: none;
+  background: radial-gradient(circle at 50% 44%, rgba(91,73,166,.13), transparent 34%), radial-gradient(circle at 85% 15%, rgba(46,93,154,.09), transparent 28%);
+}
+
+.app-shell {
+  position: relative; z-index: 1;
+  width: min(980px, calc(100% - 32px));
+  height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding: 48px 0 22px;
+}
+
+.brand { text-align: center; flex: 0 0 auto; }
+.brand-mark { display: flex; justify-content: center; gap: 5px; margin-bottom: 12px; }
+.brand-mark span { display: block; width: 4px; height: 4px; border-radius: 50%; background: #fff; box-shadow: 0 0 14px #fff; }
+.brand-mark span:nth-child(2) { transform: scale(1.8); background: var(--accent); box-shadow: 0 0 18px var(--accent); }
+.brand-name {
+  font-family: Orbitron, sans-serif;
+  font-size: clamp(2.3rem, 7vw, 4.9rem);
+  font-weight: 700;
+  letter-spacing: -.06em;
+  line-height: .95;
+  background: linear-gradient(105deg, #fff 15%, #c4b5fd 52%, #60a5fa 90%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-shadow: 0 0 40px rgba(167,139,250,.16);
+}
+.brand-name span { font-weight: 500; }
+.brand-subtitle { margin-top: 13px; color: var(--muted); font-size: .74rem; letter-spacing: .34em; text-transform: uppercase; }
+
+.chat { flex: 1; min-height: 0; overflow: auto; padding: 30px 4px 20px; scrollbar-width: thin; }
+.messages { display: flex; flex-direction: column; gap: 18px; max-width: 820px; margin: 0 auto; }
+.message { display: flex; animation: rise .28s ease both; }
+.message.user { justify-content: flex-end; }
+.bubble { max-width: min(78%, 700px); padding: 14px 17px; border: 1px solid var(--line); border-radius: 18px; line-height: 1.58; white-space: pre-wrap; }
+.user .bubble { background: rgba(116,93,190,.18); border-color: rgba(167,139,250,.25); border-bottom-right-radius: 5px; }
+.assistant .bubble { background: rgba(7,10,18,.58); border-bottom-left-radius: 5px; }
+.typing { color: var(--muted); font-size: .9rem; }
+
+.composer {
+  flex: 0 0 auto;
+  display: flex; gap: 10px; align-items: flex-end;
+  max-width: 820px; width: 100%; margin: 0 auto;
+  padding: 8px;
+  background: var(--panel);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 20px;
+  box-shadow: 0 18px 60px rgba(0,0,0,.45), 0 0 45px rgba(88,68,150,.08);
+  backdrop-filter: blur(18px);
+}
+textarea {
+  flex: 1; min-height: 50px; max-height: 160px; resize: none;
+  border: 0; outline: 0; background: transparent; color: var(--text);
+  padding: 14px 13px; font: inherit; line-height: 1.45;
+}
+textarea::placeholder { color: rgba(231,235,255,.4); }
+button {
+  height: 50px; padding: 0 18px; border: 0; border-radius: 14px;
+  color: #08090d; background: linear-gradient(135deg, #ddd6fe, #93c5fd);
+  font: 600 .9rem Inter, sans-serif; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: transform .18s ease, filter .18s ease;
+}
+button:hover { transform: translateY(-1px); filter: brightness(1.08); }
+button:disabled { opacity: .5; cursor: wait; transform: none; }
+button svg { width: 18px; }
+.hint { flex: 0 0 auto; text-align: center; color: rgba(231,235,255,.28); font-size: .68rem; margin-top: 11px; }
+
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 620px) {
+  .app-shell { width: calc(100% - 18px); padding-top: 32px; }
+  .bubble { max-width: 88%; }
+  button span { display: none; }
+  button { width: 50px; justify-content: center; padding: 0; }
+}
