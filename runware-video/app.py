@@ -3,7 +3,6 @@ from __future__ import annotations
 import asyncio
 import base64
 import io
-import os
 import subprocess
 import tempfile
 from dataclasses import dataclass
@@ -66,16 +65,6 @@ MODELS = {
         notes="Premium comparison model; image-to-video supports a first frame.",
     ),
 }
-
-
-def get_api_key() -> str | None:
-    try:
-        key = st.secrets.get("RUNWARE_API_KEY")
-    except Exception:
-        key = None
-    if not key:
-        key = os.getenv("RUNWARE_API_KEY")
-    return str(key).strip() if key else None
 
 
 def prepare_image(uploaded: Any, target_ratio: str) -> tuple[bytes, str]:
@@ -160,8 +149,8 @@ def download_video(url: str) -> bytes:
 
 def convert_to_24fps(video_bytes: bytes) -> bytes:
     with tempfile.TemporaryDirectory() as tmp:
-        source = os.path.join(tmp, "source.mp4")
-        target = os.path.join(tmp, "output.mp4")
+        source = f"{tmp}/source.mp4"
+        target = f"{tmp}/output.mp4"
         with open(source, "wb") as handle:
             handle.write(video_bytes)
         try:
@@ -183,9 +172,16 @@ def convert_to_24fps(video_bytes: bytes) -> bytes:
 st.title("🎬 New Horizon Video Generator")
 st.caption("Internal tool for Runware image-to-video generation")
 
-api_key = get_api_key()
-if not api_key:
-    st.error("RUNWARE_API_KEY is missing. Add it to Streamlit Secrets.")
+st.info("Enter your own Runware API key. The key is used only for the current session and is not stored in the repository.")
+api_key = st.text_input(
+    "Runware API key",
+    type="password",
+    placeholder="Enter your Runware API key",
+    help="Your API key is sent directly to Runware for generation. It is not stored in GitHub or Streamlit Secrets.",
+)
+
+if not api_key.strip():
+    st.warning("Please enter your Runware API key to use the generator.")
     st.stop()
 
 with st.sidebar:
@@ -281,4 +277,4 @@ if "generated_video" in st.session_state:
     )
 
 st.divider()
-st.caption("Runware API key is read from Streamlit Secrets and is never written to the repository.")
+st.caption("Your API key is entered at runtime and is not stored in the repository.")
