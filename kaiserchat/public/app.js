@@ -6,47 +6,63 @@ const canvas = document.getElementById("stars");
 const ctx = canvas.getContext("2d");
 const chatList = document.getElementById("chat-list");
 const toast = document.getElementById("toast");
+const remainingEl = document.getElementById("remaining");
+const budgetLabelEl = document.getElementById("budget-label");
+const usedPercentEl = document.getElementById("used-percent");
+const tachoBarEl = document.getElementById("tacho-bar");
+const requestCountEl = document.getElementById("request-count");
+const usedCostEl = document.getElementById("used-cost");
+const avgCostEl = document.getElementById("avg-cost");
+const tachoNoteEl = document.getElementById("tacho-note");
 
 const history = [];
-const meterKey = "kaiserchat-api-meter-v1";
-const budget = 5.00;
-let meter = loadMeter();
 let stars = [];
 let busy = false;
 let currentTitle = "Neuer Chat";
 
-function loadMeter() {
+function formatUsd(value, decimals = 2) {
+  return `$${Number(value || 0).toFixed(decimals)}`;
+}
+
+function updateCreditMeter(data) {
+  if (!data?.configured) {
+    remainingEl.textContent = "—";
+    budgetLabelEl.textContent = "/ — remaining";
+    usedPercentEl.textContent = "—";
+    tachoBarEl.style.width = "0%";
+    requestCountEl.textContent = "—";
+    usedCostEl.textContent = "—";
+    avgCostEl.textContent = "—";
+    tachoNoteEl.textContent = data?.error || "OpenAI-Nutzungsdaten konnten nicht geladen werden.";
+    return;
+  }
+
+  const remaining = Number(data.remainingUsd) || 0;
+  const budget = Number(data.budgetUsd) || 0;
+  const used = Number(data.usedUsd) || 0;
+  const percent = Number(data.usedPercent) || 0;
+
+  remainingEl.textContent = formatUsd(remaining);
+  budgetLabelEl.textContent = `/ ${formatUsd(budget)} remaining`;
+  usedPercentEl.textContent = `${percent.toFixed(1)}% used`;
+  tachoBarEl.style.width = `${Math.min(100, Math.max(0, percent))}%`;
+  requestCountEl.textContent = String(Number(data.requests) || 0);
+  usedCostEl.textContent = formatUsd(used);
+  avgCostEl.textContent = formatUsd(Number(data.avgUsd) || 0, 4);
+  tachoNoteEl.textContent = data.projectFiltered
+    ? "OpenAI Usage API · projektbezogen · Aktualisierung kann einige Minuten verzögert sein"
+    : "OpenAI Usage API · organisationsweit · Aktualisierung kann einige Minuten verzögert sein";
+}
+
+async function refreshCreditMeter() {
   try {
-    const saved = JSON.parse(localStorage.getItem(meterKey) || "null");
-    if (saved && typeof saved === "object") {
-      return { cost: Number(saved.cost) || 0, requests: Number(saved.requests) || 0, startedAt: saved.startedAt || new Date().toISOString() };
-    }
-  } catch (error) { console.warn("Could not load API meter", error); }
-  return { cost: 0, requests: 0, startedAt: new Date().toISOString() };
-}
-
-function saveMeter() {
-  try { localStorage.setItem(meterKey, JSON.stringify(meter)); } catch (error) { console.warn(error); }
-}
-
-function updateMeter() {
-  const used = Math.max(0, meter.cost);
-  const remaining = Math.max(0, budget - used);
-  const percent = Math.min(100, (used / budget) * 100);
-  const avg = meter.requests ? used / meter.requests : 0;
-  document.getElementById("remaining").textContent = `$${remaining.toFixed(2)}`;
-  document.getElementById("used-percent").textContent = `${percent.toFixed(1)}% used`;
-  document.getElementById("tacho-bar").style.width = `${percent}%`;
-  document.getElementById("request-count").textContent = String(meter.requests);
-  document.getElementById("used-cost").textContent = `$${used.toFixed(2)}`;
-  document.getElementById("avg-cost").textContent = `$${avg.toFixed(4)}`;
-}
-
-function addRequestCost(cost) {
-  meter.requests += 1;
-  meter.cost += Math.max(0, Number(cost) || 0);
-  saveMeter();
-  updateMeter();
+    const response = await fetch(`/api/credits?ts=${Date.now()}`, { cache: "no-store" });
+    const data = await response.json();
+    updateCreditMeter(data);
+  } catch (error) {
+    console.error("Could not load credit meter", error);
+    updateCreditMeter({ configured: false, error: "API-Credit-Tacho gerade nicht erreichbar." });
+  }
 }
 
 function resizeStars() {
@@ -146,7 +162,7 @@ async function submitMessage(event) {
     bubble.classList.remove("typing");
     bubble.textContent = data.message;
     history.push({ role: "assistant", content: data.message });
-    addRequestCost(data.estimatedCostUsd);
+    await refreshCreditMeter();
   } catch (error) {
     bubble.classList.remove("typing");
     bubble.textContent = "KaiserChat ist gerade nicht erreichbar. Bitte versuche es noch einmal.";
@@ -174,7 +190,8 @@ prompt.addEventListener("keydown", (event) => {
 form.addEventListener("submit", submitMessage);
 window.addEventListener("resize", resizeStars);
 
-updateMeter();
+refreshCreditMeter();
+setInterval(refreshCreditMeter, 60_000);
 resizeStars();
 animateStars();
 addMessage("assistant", "Willkommen bei KaiserChat. Was möchtest du wissen?");
