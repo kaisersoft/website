@@ -33,7 +33,7 @@ function updateCreditMeter(data) {
     requestCountEl.textContent = "—";
     usedCostEl.textContent = "—";
     avgCostEl.textContent = "—";
-    tachoNoteEl.textContent = data?.error || "OpenAI-Nutzungsdaten konnten nicht geladen werden.";
+    tachoNoteEl.textContent = "";
     return;
   }
 
@@ -49,9 +49,7 @@ function updateCreditMeter(data) {
   requestCountEl.textContent = String(Number(data.requests) || 0);
   usedCostEl.textContent = formatUsd(used);
   avgCostEl.textContent = formatUsd(Number(data.avgUsd) || 0, 4);
-  tachoNoteEl.textContent = data.projectFiltered
-    ? "OpenAI Usage API · projektbezogen · Aktualisierung kann einige Minuten verzögert sein"
-    : "OpenAI Usage API · organisationsweit · Aktualisierung kann einige Minuten verzögert sein";
+  tachoNoteEl.textContent = "";
 }
 
 async function refreshCreditMeter() {
@@ -61,7 +59,7 @@ async function refreshCreditMeter() {
     updateCreditMeter(data);
   } catch (error) {
     console.error("Could not load credit meter", error);
-    updateCreditMeter({ configured: false, error: "API-Credit-Tacho gerade nicht erreichbar." });
+    updateCreditMeter({ configured: false });
   }
 }
 
@@ -168,7 +166,7 @@ async function submitMessage(event) {
     bubble.textContent = "KaiserChat ist gerade nicht erreichbar. Bitte versuche es noch einmal.";
     history.pop();
     console.error(error);
-    showToast(error.message || "API-Fehler");
+    showToast("KaiserChat ist gerade nicht erreichbar.");
   } finally {
     busy = false;
     send.disabled = false;
