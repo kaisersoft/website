@@ -1,0 +1,4 @@
+streamlit
+runware-sdk
+requests
+Pillow
