@@ -29,9 +29,9 @@ body {
 .planet-glow { position: fixed; right: -14vw; bottom: -28vh; width: 48vw; height: 48vw; border-radius: 50%; pointer-events: none; opacity: .34; background: radial-gradient(circle at 38% 34%, rgba(75,119,201,.08), rgba(20,36,72,.16) 38%, transparent 63%); box-shadow: -20px -15px 90px rgba(48,93,170,.08); }
 
 .app-shell { position: relative; z-index: 1; width: min(1500px, calc(100% - 30px)); height: 100vh; margin: 0 auto; display: flex; flex-direction: column; padding: 14px 0 10px; }
-.topbar { flex: 0 0 150px; display: grid; grid-template-columns: 260px 1fr minmax(430px,560px); gap: 24px; align-items: start; }
-.brand { text-decoration: none; color: inherit; padding: 12px 0 0 24px; }
-.brand-name { font-family: Orbitron,sans-serif; font-size: clamp(2rem,3.8vw,3.45rem); font-weight: 700; letter-spacing: -.07em; line-height: .95; background: linear-gradient(105deg,#fff 12%,#c4b5fd 56%,#68a8ff 92%); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 0 42px rgba(167,139,250,.14); }
+.topbar { flex: 0 0 150px; display: grid; grid-template-columns: 330px minmax(0,1fr) minmax(430px,560px); gap: 24px; align-items: start; }
+.brand { display:block; min-width:0; text-decoration: none; color: inherit; padding: 12px 0 0 14px; overflow:visible; }
+.brand-name { display:block; width:max-content; max-width:100%; white-space:nowrap; font-family: Orbitron,sans-serif; font-size: clamp(2rem,3.35vw,3.35rem); font-weight: 700; letter-spacing: -.07em; line-height: .95; background: linear-gradient(105deg,#fff 12%,#c4b5fd 56%,#68a8ff 92%); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 0 42px rgba(167,139,250,.14); }
 .brand-name span { font-weight: 500; }
 .brand-subtitle { margin: 12px 0 0 96px; color: rgba(241,245,255,.7); font-size: .67rem; letter-spacing: .38em; text-transform: uppercase; }
 .tagline { align-self: start; justify-self: center; padding-top: 17px; text-align: center; color: rgba(241,245,255,.82); font-family: Georgia,serif; font-style: italic; transform: rotate(-3deg); line-height: 1.05; }
@@ -108,7 +108,7 @@ button:disabled { opacity:.5; cursor:wait; transform:none; }
 @keyframes rise { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 
 @media (max-width:1050px) {
-  .topbar { grid-template-columns:240px 1fr; }
+  .topbar { grid-template-columns:260px 1fr; }
   .credit-tacho { grid-column:1 / -1; position:absolute; top:10px; right:0; width:min(430px,48vw); transform:scale(.9); transform-origin:top right; }
   .tagline { display:none; }
   .topbar { flex-basis:140px; }
