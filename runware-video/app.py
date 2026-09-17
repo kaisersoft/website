@@ -66,6 +66,40 @@ MODELS = {
     ),
 }
 
+# Current Runware public list pricing used for a pre-generation estimate.
+# The final charged amount returned by Runware remains authoritative.
+ESTIMATE_RATES = {
+    "P-Video-2": {"720p": 0.02, "1080p": 0.04},
+    "Vidu 2.0": {"720p": {4: 0.11, 8: 0.275}, "1080p": {4: 0.275, 8: 0.275}},
+    "Wan 3.0": {"720p": 0.10, "1080p": 0.20},
+    "Runway Gen-4.5": {"720p": 0.12},
+}
+
+RUNWARE_DASHBOARD_URL = "https://my.runware.ai/wallet"
+
+
+def estimate_cost(model_name: str, duration: int, resolution: str) -> float | None:
+    rates = ESTIMATE_RATES.get(model_name, {})
+    rate = rates.get(resolution)
+    if isinstance(rate, dict):
+        value = rate.get(duration)
+        return float(value) if value is not None else None
+    if rate is None:
+        return None
+    return float(rate) * duration
+
+
+async def fetch_account_details(api_key: str) -> dict[str, Any]:
+    async with Runware(api_key=api_key, transport="rest") as client:
+        result = await client.account_management({"operation": "getDetails"})
+        if not result:
+            raise RuntimeError("Runware returned no account details.")
+        return dict(result[0])
+
+
+def get_account_details(api_key: str) -> dict[str, Any]:
+    return asyncio.run(fetch_account_details(api_key))
+
 
 def prepare_image(uploaded: Any, target_ratio: str) -> tuple[bytes, str]:
     image = Image.open(uploaded).convert("RGB")
@@ -170,7 +204,7 @@ def convert_to_24fps(video_bytes: bytes) -> bytes:
 
 
 st.title("🎬 New Horizon Video Generator")
-st.caption("Internal tool for Runware image-to-video generation")
+st.caption("Runware image-to-video generator for New Horizon content")
 
 st.info("Enter your own Runware API key. The key is used only for the current session and is not stored in the repository.")
 api_key = st.text_input(
@@ -183,6 +217,19 @@ api_key = st.text_input(
 if not api_key.strip():
     st.warning("Please enter your Runware API key to use the generator.")
     st.stop()
+
+# Account status is deliberately queried with the user-supplied key.
+# No API key is persisted or displayed by the application.
+try:
+    account = get_account_details(api_key.strip())
+    balance = account.get("balance") or {}
+    balance_amount = balance.get("amount")
+    balance_currency = balance.get("currency", "USD")
+except Exception as exc:
+    account = {}
+    balance_amount = None
+    balance_currency = "USD"
+    st.warning(f"Could not read Runware account balance: {exc}")
 
 with st.sidebar:
     st.header("Generation")
@@ -198,6 +245,29 @@ with st.sidebar:
     seed_input = st.number_input("Seed (0 = random)", min_value=0, max_value=2147483647, value=0, step=1)
     postprocess_24 = st.checkbox("Post-process to 24 fps", value=False,
                                  help="Use this for models that do not natively produce 24 fps.")
+
+    st.divider()
+    st.subheader("💳 Runware")
+    if balance_amount is not None:
+        st.metric("Current balance", f"{float(balance_amount):.2f} {balance_currency}")
+    else:
+        st.metric("Current balance", "Unavailable")
+    st.link_button("Open Runware Dashboard / Top up", RUNWARE_DASHBOARD_URL, use_container_width=True)
+    if st.button("↻ Refresh balance", use_container_width=True):
+        st.rerun()
+
+    estimated_cost = estimate_cost(model_name, duration, resolution)
+    if estimated_cost is not None:
+        st.info(f"Estimated next generation: **${estimated_cost:.3f}**")
+        if balance_amount is not None:
+            remaining = float(balance_amount) - estimated_cost
+            if remaining < 0:
+                st.warning("Estimated cost exceeds the current balance.")
+            else:
+                st.caption(f"Estimated balance after generation: ${remaining:.3f}")
+    else:
+        st.info("Pre-generation cost estimate is not available for this configuration.")
+    st.caption("Estimate only. The final Runware task cost is authoritative.")
 
 uploaded = st.file_uploader("Persona image", type=["jpg", "jpeg", "png", "webp"])
 
