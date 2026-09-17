@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VoltDesk AI — Market Intelligence & Behavioural Engine</title>
+<link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/kaisersoft/assets/main/favicon.svg">
+<link rel="stylesheet" href="./styles.css">
+<style>
+.ai-page{background:radial-gradient(circle at 78% 18%,rgba(0,240,255,.08),transparent 30%),radial-gradient(circle at 20% 55%,rgba(112,0,255,.06),transparent 32%)}
+.ai-hero{max-width:1180px;margin:0 auto;padding:105px 5vw 95px;text-align:center}
+.ai-hero .eyebrow{display:inline-flex;align-items:center;gap:10px}
+.ai-hero h1{font-size:clamp(52px,7vw,92px);line-height:.94;letter-spacing:-.065em;margin:24px auto 28px;max-width:1000px}
+.ai-hero h1 em{font-style:normal;color:#00F0FF}
+.ai-hero .lead{max-width:820px;margin:0 auto;font-size:19px;line-height:1.75}
+.ai-badge{display:inline-flex;margin-top:30px;padding:9px 15px;border:1px solid #20505a;border-radius:999px;background:#0c1415;color:#00F0FF;font:11px 'DM Mono';letter-spacing:.08em}
+.ai-section{padding:110px 5vw;border-top:1px solid #171b1c}
+.ai-inner{max-width:1180px;margin:0 auto}
+.ai-kicker{font:11px 'DM Mono';letter-spacing:.16em;color:#00F0FF}
+.ai-section h2{font-size:clamp(42px,5vw,68px);letter-spacing:-.055em;line-height:1;margin:18px 0 22px;max-width:850px}
+.ai-intro{color:#9eaaaa;font-size:17px;line-height:1.75;max-width:820px}
+.ai-duo{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#252c2d;margin-top:58px}
+.ai-card{background:#0b0e0f;padding:42px;min-height:430px;position:relative;overflow:hidden}
+.ai-card:after{content:'';position:absolute;width:260px;height:260px;border:1px solid rgba(0,240,255,.08);border-radius:50%;right:-120px;bottom:-120px}
+.ai-card .number{font:10px 'DM Mono';color:#687575;letter-spacing:.14em}
+.ai-card h3{font-size:32px;letter-spacing:-.04em;margin:24px 0 8px}
+.ai-card h3 em{font-style:normal;color:#00F0FF}
+.ai-card .metaphor{font:12px 'DM Mono';color:#00F0FF;margin-bottom:28px}
+.ai-card p{color:#a1adad;line-height:1.7;font-size:14px;max-width:500px}
+.ai-card ul{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:12px}
+.ai-card li{font-size:13px;color:#cbd3d2;padding-left:20px;position:relative}
+.ai-card li:before{content:'→';position:absolute;left:0;color:#00F0FF}
+.ai-brief{margin-top:58px;background:#090d0e;border:1px solid #252c2d;border-radius:14px;box-shadow:0 30px 70px rgba(0,0,0,.5);overflow:hidden}
+.ai-windowbar{height:48px;border-bottom:1px solid #202627;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:10px 'DM Mono';color:#748080;letter-spacing:.1em}
+.ai-windowbar .live{color:#00F0FF}
+.ai-window{padding:42px 48px 48px;display:grid;grid-template-columns:1.25fr .75fr;gap:48px}
+.ai-window h3{font-size:26px;margin:0 0 10px;letter-spacing:-.035em}
+.ai-window p{color:#9eaaaa;line-height:1.7;font-size:14px}
+.ai-label{font:9px 'DM Mono';color:#00F0FF;letter-spacing:.14em;margin-bottom:12px}
+.ai-attention{display:grid;gap:10px;margin-top:26px}
+.ai-attention div{padding:17px 18px;background:#0e1415;border:1px solid #20292a;border-radius:7px}
+.ai-attention b{display:block;font-size:13px;margin-bottom:6px}
+.ai-attention span{font:10px 'DM Mono';color:#778484}
+.ai-side{border-left:1px solid #202627;padding-left:34px}
+.ai-side .stat{padding:17px 0;border-bottom:1px solid #202627}
+.ai-side .stat:last-child{border-bottom:0}
+.ai-side strong{display:block;color:#00F0FF;font-size:18px;margin-bottom:5px}
+.ai-side span{font:10px 'DM Mono';color:#718080}
+.ai-questions{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:#252c2d;margin-top:52px}
+.ai-question{background:#0b0e0f;padding:28px 30px;min-height:155px}
+.ai-question span{font:10px 'DM Mono';color:#00F0FF}
+.ai-question p{font-size:17px;line-height:1.5;margin:17px 0 0;color:#dce3e1}
+.ai-principle{margin-top:60px;padding:40px;background:linear-gradient(135deg,#0b1112,#080b0c);border:1px solid #20505a;border-radius:12px;display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+.ai-principle h3{font-size:30px;letter-spacing:-.04em;margin:0 0 14px}.ai-principle p{color:#9eaaaa;line-height:1.7;margin:0}.ai-principle .quote{font-size:25px;line-height:1.35;color:#f0f5f4;letter-spacing:-.025em}.ai-principle .quote em{font-style:normal;color:#00F0FF}
+.ai-coming{text-align:center;padding:125px 20px;background:radial-gradient(circle at 50% 45%,rgba(0,240,255,.1),transparent 38%)}
+.ai-coming h2{margin:18px auto 20px;font-size:clamp(48px,6vw,82px);max-width:900px}.ai-coming p{max-width:680px;margin:0 auto 34px;color:#9eaaaa;line-height:1.75;font-size:16px}.ai-coming .date{display:inline-flex;padding:12px 18px;border:1px solid #20505a;border-radius:7px;background:#0b1112;color:#00F0FF;font:11px 'DM Mono';letter-spacing:.1em}
+@media(max-width:800px){.ai-duo,.ai-window,.ai-principle{grid-template-columns:1fr}.ai-side{border-left:0;border-top:1px solid #202627;padding:28px 0 0}.ai-questions{grid-template-columns:1fr}.ai-window{padding:32px 26px}.ai-card{padding:32px}}
+</style>
+</head>
+<body class="ai-page">
+<header class="nav">
+  <a class="brand" href="./index.html">VOLT<span>DESK</span></a>
+  <nav><a href="./why-voltdesk.html">Warum VoltDesk</a><a href="./toolstack.html">Toolstack</a><a href="./features.html">Features</a><a href="./how-it-works.html">So funktioniert es</a><a href="./faq.html">FAQ</a><a href="./index.html#pricing">Preise</a></nav>
+  <div class="actions"><a class="btn small" href="https://voltdesk.streamlit.app">Kostenlos testen</a></div>
+</header>
+
+<main>
+<section class="ai-hero">
+  <div class="eyebrow">VOLT DESK AI · MARKET INTELLIGENCE & BEHAVIOURAL ENGINE</div>
+  <h1>Zwei Perspektiven.<br><em>Ein Trading Desk.</em></h1>
+  <p class="lead">VoltDesk verbindet deine eigene Trading-Analyse mit moderner KI: morgens der Blick auf den Markt – später der Blick auf dein eigenes Trading.</p>
+  <div class="ai-badge">POWERED BY OPENAI · COMING SOON</div>
+</section>
+
+<section class="ai-section">
+  <div class="ai-inner">
+    <div class="ai-kicker">DIE ZWEI KI-FUNKTIONEN</div>
+    <h2>Ein Blick nach draußen.<br><em>Ein Blick nach innen.</em></h2>
+    <p class="ai-intro">AI soll den Trader nicht ersetzen. Sie soll Informationen verdichten, Zusammenhänge sichtbar machen und den eigenen Denkprozess erweitern – direkt dort, wo du ohnehin arbeitest: in VoltDesk.</p>
+
+    <div class="ai-duo">
+      <article class="ai-card">
+        <div class="number">01 · MORNING BRIEFING</div>
+        <h3>AI Pre-Market <em>Coach</em></h3>
+        <div class="metaphor">DIE AUSSENSCHAU</div>
+        <p>Ein kompakter KI-Blick auf den ausgewählten Markt. Aktuelle Nachrichten, Catalysts, Ereignisse und Marktbewegungen werden zu einem Morning Briefing verdichtet.</p>
+        <ul>
+          <li>EU · UK · CH · US</li>
+          <li>Ein Briefing pro Account und Tradingtag</li>
+          <li>Auf Wunsch mit persönlicher Watchlist</li>
+          <li>Direkt in VoltDesk – kein Toolwechsel</li>
+        </ul>
+      </article>
+      <article class="ai-card">
+        <div class="number">02 · JOURNAL ANALYST</div>
+        <h3>AI Journal <em>Analyst</em></h3>
+        <div class="metaphor">DIE INNENSCHAU</div>
+        <p>Deine eigenen Trades werden zum Ausgangspunkt einer intelligenten Reflexion. Der Analyst sucht nach Mustern in Strategien, Setups, Ergebnissen und Tradingverhalten.</p>
+        <ul>
+          <li>Analysiert reale Journal- und Tradingdaten</li>
+          <li>Erkennt wiederkehrende Muster</li>
+          <li>Fragt nach dem „Warum“ hinter Ergebnissen</li>
+          <li>Hilft, aus Trades systematisch zu lernen</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="ai-section">
+  <div class="ai-inner">
+    <div class="ai-kicker">MORNING BRIEFING</div>
+    <h2>Was passiert heute<br><em>am Markt?</em></h2>
+    <p class="ai-intro">Ein Klick. Ein Briefing. Ein aktueller Blick auf den von dir gewählten Markt. Die KI recherchiert aktuelle Informationen und strukturiert sie für den Daytrading-Kontext.</p>
+
+    <div class="ai-brief">
+      <div class="ai-windowbar"><span>VOLT DESK · AI PRE-MARKET COACH</span><span class="live">● MORNING BRIEFING</span></div>
+      <div class="ai-window">
+        <div>
+          <div class="ai-label">MARKET SNAPSHOT</div>
+          <h3>Heute zählt nicht alles.<br>Nur das Relevante.</h3>
+          <p>Das Briefing verdichtet die aktuelle Informationslage und stellt die Situationen heraus, die für die heutige Session besondere Aufmerksamkeit verdienen.</p>
+          <div class="ai-label" style="margin-top:30px">TOP ATTENTION</div>
+          <div class="ai-attention">
+            <div><b>01 · Unternehmens-Catalyst</b><span>NEWS · MOMENTUM · VOLUME</span></div>
+            <div><b>02 · Marktbewegung</b><span>VOLATILITY · SECTOR CONTEXT</span></div>
+            <div><b>03 · Watchlist Candidate</b><span>RELEVANCE · RISK</span></div>
+          </div>
+        </div>
+        <aside class="ai-side">
+          <div class="ai-label">BRIEFING</div>
+          <div class="stat"><strong>MARKET</strong><span>Ausgewählter Markt</span></div>
+          <div class="stat"><strong>3–5</strong><span>Top Attention Situationen</span></div>
+          <div class="stat"><strong>WATCHLIST</strong><span>Persönliche Werte im Kontext</span></div>
+          <div class="stat"><strong>RISKS</strong><span>Events & Unsicherheiten</span></div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ai-section">
+  <div class="ai-inner">
+    <div class="ai-kicker">JOURNAL ANALYST</div>
+    <h2>Nicht: „Was soll ich tun?“<br><em>Sondern: „Was kann ich lernen?“</em></h2>
+    <p class="ai-intro">Der Journal Analyst betrachtet dein Trading nicht als Signalmaschine. Er hilft dir, deine eigenen Entscheidungen mit Abstand zu betrachten – eher wie ein guter Freund, der die richtigen Fragen stellt.</p>
+
+    <div class="ai-questions">
+      <div class="ai-question"><span>FRAGE 01</span><p>Welche meiner Strategien funktioniert unter welchen Bedingungen am besten?</p></div>
+      <div class="ai-question"><span>FRAGE 02</span><p>Welche Muster erkennst du in meinen Verlusttrades?</p></div>
+      <div class="ai-question"><span>FRAGE 03</span><p>Halte ich meine definierten Trading-Regeln tatsächlich ein?</p></div>
+      <div class="ai-question"><span>FRAGE 04</span><p>Welche Gemeinsamkeiten haben meine besten Trades?</p></div>
+    </div>
+
+    <div class="ai-principle">
+      <div>
+        <h3>AI als Werkzeug.<br>Nicht als Autopilot.</h3>
+        <p>VoltDesk soll keinen Tradingautomaten bauen, der Entscheidungen abnimmt. Die Märkte bleiben unberechenbar. Die Entscheidung und Verantwortung bleiben beim Menschen.</p>
+      </div>
+      <div class="quote">„Die KI erweitert deinen Blick.<br><em>Du entscheidest, was du daraus machst.</em>“</div>
+    </div>
+  </div>
+</section>
+
+<section class="ai-coming">
+  <div class="ai-kicker">VOLT DESK AI</div>
+  <h2>Coming Soon.</h2>
+  <p>Die AI-Funktionen befinden sich im experimentellen Praxistest und werden bis zum VoltDesk Release weiterentwickelt und evaluiert.</p>
+  <div class="date">PLANNED FOR Q2 2027</div>
+</section>
+</main>
+
+<footer>
+  <span>© <a href="http://www.kaisersoft.global">kaisersoft.ai</a> · <a href="./impressum.html">Impressum</a> · <a href="./agb.html">AGB</a> · <a href="./datenschutz.html">Datenschutz</a></span>
+  <span class="social-links" aria-label="Social Media">
+    <a class="social-link" href="https://x.com/voltdeskapp" target="_blank" rel="noopener noreferrer" aria-label="VoltDesk auf X" title="VoltDesk auf X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817-5.964 6.817H1.682l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231 5.45-6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg></a>
+    <a class="social-link" href="https://www.youtube.com/@VoltDesk" target="_blank" rel="noopener noreferrer" aria-label="VoltDesk auf YouTube" title="VoltDesk auf YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.19a3.01 3.01 0 0 0-2.12-2.13C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.56A3.01 3.01 0 0 0 .5 6.19 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.81 3.01 3.01 0 0 0 2.12 2.13C4.5 20.5 12 20.5 12 20.5s7.5 0 9.38-.56a3.01 3.01 0 0 0 2.12-2.13A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.81ZM9.75 15.02V8.98L15.5 12l-5.75 3.02Z"/></svg></a>
+    <a class="social-link" href="https://www.instagram.com/kaisersoft.ai/" target="_blank" rel="noopener noreferrer" aria-label="kaisersoft.ai auf Instagram" title="kaisersoft.ai auf Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5Zm5.25-3.1a1.1 1.1 0 1 1-1.1 1.1 1.1 0 1 1-1.1-1.1Z"/></svg></a>
+  </span>
+  <span>Professional Trading Intelligence · Paper Trading</span>
+</footer>
+</body>
+</html>
