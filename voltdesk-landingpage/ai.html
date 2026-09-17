@@ -1,60 +1,22 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VoltDesk AI — Market Intelligence & Behavioural Engine</title>
+<title>VoltDesk AI Coach — Coming Soon</title>
 <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/kaisersoft/assets/main/favicon.svg">
 <link rel="stylesheet" href="./styles.css">
 <style>
-.ai-page{background:radial-gradient(circle at 78% 18%,rgba(0,240,255,.08),transparent 30%),radial-gradient(circle at 20% 55%,rgba(112,0,255,.06),transparent 32%)}
-.ai-hero{max-width:1180px;margin:0 auto;padding:105px 5vw 95px;text-align:center}
-.ai-hero .eyebrow{display:inline-flex;align-items:center;gap:10px}
-.ai-hero h1{font-size:clamp(52px,7vw,92px);line-height:.94;letter-spacing:-.065em;margin:24px auto 28px;max-width:1000px}
-.ai-hero h1 em{font-style:normal;color:#00F0FF}
-.ai-hero .lead{max-width:820px;margin:0 auto;font-size:19px;line-height:1.75}
-.ai-badge{display:inline-flex;margin-top:30px;padding:9px 15px;border:1px solid #20505a;border-radius:999px;background:#0c1415;color:#00F0FF;font:11px 'DM Mono';letter-spacing:.08em}
-.ai-section{padding:110px 5vw;border-top:1px solid #171b1c}
-.ai-inner{max-width:1180px;margin:0 auto}
-.ai-kicker{font:11px 'DM Mono';letter-spacing:.16em;color:#00F0FF}
-.ai-section h2{font-size:clamp(42px,5vw,68px);letter-spacing:-.055em;line-height:1;margin:18px 0 22px;max-width:850px}
-.ai-intro{color:#9eaaaa;font-size:17px;line-height:1.75;max-width:820px}
-.ai-duo{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#252c2d;margin-top:58px}
-.ai-card{background:#0b0e0f;padding:42px;min-height:430px;position:relative;overflow:hidden}
-.ai-card:after{content:'';position:absolute;width:260px;height:260px;border:1px solid rgba(0,240,255,.08);border-radius:50%;right:-120px;bottom:-120px}
-.ai-card .number{font:10px 'DM Mono';color:#687575;letter-spacing:.14em}
-.ai-card h3{font-size:32px;letter-spacing:-.04em;margin:24px 0 8px}
-.ai-card h3 em{font-style:normal;color:#00F0FF}
-.ai-card .metaphor{font:12px 'DM Mono';color:#00F0FF;margin-bottom:28px}
-.ai-card p{color:#a1adad;line-height:1.7;font-size:14px;max-width:500px}
-.ai-card ul{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:12px}
-.ai-card li{font-size:13px;color:#cbd3d2;padding-left:20px;position:relative}
-.ai-card li:before{content:'→';position:absolute;left:0;color:#00F0FF}
-.ai-brief{margin-top:58px;background:#090d0e;border:1px solid #252c2d;border-radius:14px;box-shadow:0 30px 70px rgba(0,0,0,.5);overflow:hidden}
-.ai-windowbar{height:48px;border-bottom:1px solid #202627;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:10px 'DM Mono';color:#748080;letter-spacing:.1em}
-.ai-windowbar .live{color:#00F0FF}
-.ai-window{padding:42px 48px 48px;display:grid;grid-template-columns:1.25fr .75fr;gap:48px}
-.ai-window h3{font-size:26px;margin:0 0 10px;letter-spacing:-.035em}
-.ai-window p{color:#9eaaaa;line-height:1.7;font-size:14px}
-.ai-label{font:9px 'DM Mono';color:#00F0FF;letter-spacing:.14em;margin-bottom:12px}
-.ai-attention{display:grid;gap:10px;margin-top:26px}
-.ai-attention div{padding:17px 18px;background:#0e1415;border:1px solid #20292a;border-radius:7px}
-.ai-attention b{display:block;font-size:13px;margin-bottom:6px}
-.ai-attention span{font:10px 'DM Mono';color:#778484}
-.ai-side{border-left:1px solid #202627;padding-left:34px}
-.ai-side .stat{padding:17px 0;border-bottom:1px solid #202627}
-.ai-side .stat:last-child{border-bottom:0}
-.ai-side strong{display:block;color:#00F0FF;font-size:18px;margin-bottom:5px}
-.ai-side span{font:10px 'DM Mono';color:#718080}
-.ai-questions{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:#252c2d;margin-top:52px}
-.ai-question{background:#0b0e0f;padding:28px 30px;min-height:155px}
-.ai-question span{font:10px 'DM Mono';color:#00F0FF}
-.ai-question p{font-size:17px;line-height:1.5;margin:17px 0 0;color:#dce3e1}
-.ai-principle{margin-top:60px;padding:40px;background:linear-gradient(135deg,#0b1112,#080b0c);border:1px solid #20505a;border-radius:12px;display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
-.ai-principle h3{font-size:30px;letter-spacing:-.04em;margin:0 0 14px}.ai-principle p{color:#9eaaaa;line-height:1.7;margin:0}.ai-principle .quote{font-size:25px;line-height:1.35;color:#f0f5f4;letter-spacing:-.025em}.ai-principle .quote em{font-style:normal;color:#00F0FF}
-.ai-coming{text-align:center;padding:125px 20px;background:radial-gradient(circle at 50% 45%,rgba(0,240,255,.1),transparent 38%)}
-.ai-coming h2{margin:18px auto 20px;font-size:clamp(48px,6vw,82px);max-width:900px}.ai-coming p{max-width:680px;margin:0 auto 34px;color:#9eaaaa;line-height:1.75;font-size:16px}.ai-coming .date{display:inline-flex;padding:12px 18px;border:1px solid #20505a;border-radius:7px;background:#0b1112;color:#00F0FF;font:11px 'DM Mono';letter-spacing:.1em}
-@media(max-width:800px){.ai-duo,.ai-window,.ai-principle{grid-template-columns:1fr}.ai-side{border-left:0;border-top:1px solid #202627;padding:28px 0 0}.ai-questions{grid-template-columns:1fr}.ai-window{padding:32px 26px}.ai-card{padding:32px}}
+.ai-page{background:#050607;overflow-x:hidden}
+.ai-hero{position:relative;max-width:1320px;margin:0 auto;min-height:690px;padding:86px 5vw 90px;display:grid;grid-template-columns:.92fr 1.08fr;gap:5vw;align-items:center;background:radial-gradient(circle at 82% 42%,rgba(0,240,255,.10),transparent 34%),radial-gradient(circle at 18% 20%,rgba(112,0,255,.07),transparent 28%)}
+.ai-hero-copy{position:relative;z-index:2}.ai-hero .eyebrow{font:11px 'DM Mono';letter-spacing:.18em;color:#00F0FF}.ai-hero h1{font-size:clamp(54px,6.5vw,88px);line-height:.94;letter-spacing:-.065em;margin:22px 0 28px;max-width:720px}.ai-hero h1 em{font-style:normal;color:#00F0FF}.ai-hero .lead{max-width:650px;font-size:19px;line-height:1.7;color:#b4bebe;margin:0}.ai-hero .sublead{font-size:13px;color:#718080;line-height:1.65;margin:18px 0 0;max-width:590px}.ai-hero-actions{display:flex;align-items:center;gap:24px;margin-top:34px}.ai-status{display:inline-flex;align-items:center;gap:9px;padding:10px 14px;border:1px solid #20505a;border-radius:999px;background:#0b1112;color:#00F0FF;font:10px 'DM Mono';letter-spacing:.1em}.ai-status i{width:6px;height:6px;border-radius:50%;background:#00F0FF;box-shadow:0 0 12px #00F0FF}.ai-powered{display:flex;align-items:center;gap:8px;color:#7c8989;font:10px 'DM Mono';letter-spacing:.08em}.ai-powered strong{color:#e8efed;font:600 13px Inter}
+.ai-hero-visual{position:relative;min-width:0}.ai-glow{position:absolute;inset:12% 5% 5%;background:radial-gradient(circle,rgba(0,240,255,.12),transparent 62%);filter:blur(25px);pointer-events:none}.ai-dashboard{position:relative;background:#090d0e;border:1px solid #263334;border-radius:16px;box-shadow:0 40px 100px rgba(0,0,0,.75),0 0 60px rgba(0,240,255,.07);overflow:hidden;transform:perspective(1400px) rotateY(-3deg)}.ai-dashboard-top{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid #20292a;font:10px 'DM Mono';letter-spacing:.1em;color:#728080}.ai-dashboard-top .brandline{color:#e9efee}.ai-dashboard-top .brandline span{color:#00F0FF}.ai-dashboard-top .live{color:#00F0FF}.ai-dashboard-body{display:grid;grid-template-columns:145px 1fr 175px;min-height:440px}.ai-dash-side{padding:18px;border-right:1px solid #20292a}.ai-dash-side:last-child{border-right:0;border-left:1px solid #20292a}.ai-dash-label{font:8px 'DM Mono';color:#647171;letter-spacing:.14em;margin-bottom:16px}.ai-region{padding:10px 9px;border:1px solid #20505a;background:#0e1718;color:#00F0FF;border-radius:6px;font:10px 'DM Mono';margin-bottom:9px;display:flex;justify-content:space-between}.ai-region span{color:#667575}.ai-market-row{padding:10px 0;border-bottom:1px solid #1b2425;display:flex;justify-content:space-between;font:10px 'DM Mono';color:#9ba6a5}.ai-market-row b{color:#00F0FF;font-weight:500}.ai-dash-main{padding:25px 28px}.ai-dash-main h3{font-size:24px;letter-spacing:-.035em;margin:0 0 9px}.ai-dash-main h3 em{font-style:normal;color:#00F0FF}.ai-dash-main p{font-size:12px;line-height:1.65;color:#859191;margin:0 0 20px}.ai-news{display:grid;gap:9px}.ai-news-card{padding:13px 14px;background:#0d1415;border:1px solid #1e292a;border-radius:7px}.ai-news-card b{display:block;font-size:11px;margin-bottom:5px;color:#dce3e1}.ai-news-card span{font:8px 'DM Mono';color:#687777;letter-spacing:.08em}.ai-news-card em{float:right;color:#00F0FF;font-style:normal}.ai-dash-side .stat{padding:14px 0;border-bottom:1px solid #1b2425}.ai-dash-side .stat strong{display:block;color:#00F0FF;font-size:16px;margin-bottom:5px}.ai-dash-side .stat span{font:8px 'DM Mono';color:#697777;line-height:1.4}.ai-brain{position:absolute;left:50%;bottom:-22px;transform:translateX(-50%);width:92px;height:92px;border-radius:50%;border:1px solid rgba(0,240,255,.55);background:radial-gradient(circle,rgba(0,240,255,.17),#071012 66%);display:flex;align-items:center;justify-content:center;box-shadow:0 0 35px rgba(0,240,255,.15);z-index:3}.ai-brain:before{content:'AI';font:700 22px Inter;color:#00F0FF;letter-spacing:-.06em}.ai-brain:after{content:'';position:absolute;inset:-9px;border:1px solid rgba(0,240,255,.12);border-radius:50%}
+.ai-section{padding:112px 5vw;border-top:1px solid #171b1c}.ai-inner{max-width:1220px;margin:0 auto}.ai-kicker{font:10px 'DM Mono';letter-spacing:.18em;color:#00F0FF}.ai-section h2{font-size:clamp(42px,5vw,70px);letter-spacing:-.06em;line-height:.96;margin:18px 0 22px}.ai-section h2 em{font-style:normal;color:#00F0FF}.ai-intro{font-size:17px;line-height:1.75;color:#9eaaaa;max-width:800px;margin:0}.ai-two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:58px}.ai-feature{position:relative;background:linear-gradient(145deg,#0c1213,#080b0c);border:1px solid #1f292a;border-radius:14px;padding:36px;min-height:520px;overflow:hidden;box-shadow:0 25px 65px rgba(0,0,0,.35)}.ai-feature:hover{border-color:#20505a}.ai-feature:after{content:'';position:absolute;width:330px;height:330px;border:1px solid rgba(0,240,255,.06);border-radius:50%;right:-160px;bottom:-170px}.ai-feature-head{display:flex;justify-content:space-between;align-items:start;gap:20px}.ai-number{font:10px 'DM Mono';color:#687575;letter-spacing:.14em}.ai-feature-tag{font:9px 'DM Mono';color:#00F0FF;border:1px solid #20505a;border-radius:999px;padding:7px 9px;letter-spacing:.08em}.ai-feature h3{font-size:38px;letter-spacing:-.05em;margin:24px 0 5px}.ai-feature h3 em{font-style:normal;color:#00F0FF}.ai-metaphor{font:10px 'DM Mono';letter-spacing:.16em;color:#00F0FF;margin-bottom:18px}.ai-feature>p{font-size:14px;line-height:1.7;color:#98a4a4;max-width:560px;margin:0}.ai-mini-ui{margin-top:28px;background:#080c0d;border:1px solid #202a2b;border-radius:10px;overflow:hidden;position:relative;z-index:1}.ai-mini-bar{height:35px;border-bottom:1px solid #1c2526;padding:0 12px;display:flex;align-items:center;justify-content:space-between;font:8px 'DM Mono';color:#687777}.ai-mini-content{padding:17px}.ai-mini-title{font-size:16px;margin-bottom:12px}.ai-mini-title span{color:#00F0FF}.ai-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.ai-mini-cell{padding:11px;background:#0d1415;border:1px solid #1b2526;border-radius:6px}.ai-mini-cell b{display:block;font-size:9px;margin-bottom:4px}.ai-mini-cell span{font:7px 'DM Mono';color:#667575}.ai-checks{display:grid;gap:8px;margin-top:12px}.ai-check{font-size:9px;color:#b9c2c1}.ai-check:before{content:'✓';color:#00F0FF;margin-right:8px}
+.ai-centerline{display:flex;justify-content:center;margin-top:52px}.ai-centerline span{padding:11px 18px;border:1px solid #20505a;border-radius:999px;background:#0a1112;color:#00F0FF;font:10px 'DM Mono';letter-spacing:.1em}.ai-brief-section{background:radial-gradient(circle at 78% 50%,rgba(0,240,255,.06),transparent 30%)}.ai-product{margin-top:56px;border:1px solid #263334;border-radius:16px;background:#080c0d;overflow:hidden;box-shadow:0 35px 90px rgba(0,0,0,.55)}.ai-product-bar{height:48px;border-bottom:1px solid #20292a;padding:0 18px;display:flex;align-items:center;justify-content:space-between;font:9px 'DM Mono';color:#718080;letter-spacing:.1em}.ai-product-bar strong{color:#00F0FF;font-weight:500}.ai-product-grid{display:grid;grid-template-columns:1.45fr .55fr}.ai-product-main{padding:38px}.ai-product-main h3{font-size:28px;letter-spacing:-.04em;margin:0 0 10px}.ai-product-main p{font-size:13px;color:#8e9b9a;line-height:1.7;max-width:720px;margin:0}.ai-product-side{border-left:1px solid #20292a;padding:28px}.ai-product-side .metric{padding:14px 0;border-bottom:1px solid #1b2425}.ai-product-side .metric b{display:block;color:#00F0FF;font-size:15px;margin-bottom:4px}.ai-product-side .metric span{font:8px 'DM Mono';color:#687777}.ai-headlines{display:grid;gap:9px;margin-top:25px}.ai-headline{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:12px;padding:13px 14px;border:1px solid #1c2728;background:#0d1415;border-radius:7px}.ai-headline i{font:9px 'DM Mono';color:#00F0FF;font-style:normal}.ai-headline b{font-size:11px}.ai-headline span{font:8px 'DM Mono';color:#657373}
+.ai-journal{background:linear-gradient(180deg,#080b0c,#050607)}.ai-questions{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#252c2d;margin-top:54px}.ai-question{background:#0b0e0f;padding:25px 22px;min-height:165px}.ai-question span{font:9px 'DM Mono';color:#00F0FF;letter-spacing:.1em}.ai-question p{font-size:15px;line-height:1.5;color:#d6dddb;margin:16px 0 0}.ai-journal-ui{margin-top:58px;display:grid;grid-template-columns:1fr 1fr;gap:18px}.ai-journal-card{background:#0a0e0f;border:1px solid #202a2b;border-radius:12px;padding:25px}.ai-journal-card h4{font-size:18px;margin:0 0 18px}.ai-journal-card h4 em{font-style:normal;color:#00F0FF}.ai-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ai-stat-box{padding:14px;background:#0e1516;border:1px solid #1c2728;border-radius:7px}.ai-stat-box strong{display:block;font-size:20px;color:#00F0FF}.ai-stat-box span{font:8px 'DM Mono';color:#687777}.ai-insight{margin-top:10px;padding:15px;background:#0e1718;border:1px solid #20505a;border-radius:7px}.ai-insight b{font-size:10px;color:#00F0FF}.ai-insight p{font-size:11px;color:#9ba6a5;line-height:1.55;margin:7px 0 0}.ai-principle{margin-top:70px;padding:52px;border:1px solid #20505a;border-radius:14px;background:radial-gradient(circle at 75% 50%,rgba(0,240,255,.08),transparent 35%),#0a1011;display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}.ai-principle h3{font-size:32px;letter-spacing:-.04em;margin:0 0 13px}.ai-principle p{font-size:14px;color:#98a4a4;line-height:1.7;margin:0}.ai-quote{font-size:27px;line-height:1.35;letter-spacing:-.03em;color:#edf3f1}.ai-quote em{font-style:normal;color:#00F0FF}
+.ai-coming{position:relative;text-align:center;padding:145px 20px 155px;overflow:hidden;background:radial-gradient(circle at 50% 48%,rgba(0,240,255,.12),transparent 25%),linear-gradient(180deg,#070a0b,#030405)}.ai-coming:before{content:'';position:absolute;left:0;right:0;bottom:0;height:52%;background:linear-gradient(180deg,transparent,rgba(0,0,0,.25)),radial-gradient(ellipse at 50% 100%,#142125 0,transparent 55%);opacity:.8}.ai-coming>*{position:relative;z-index:1}.ai-coming h2{font-size:clamp(55px,7vw,94px);letter-spacing:-.07em;line-height:.9;margin:20px auto 22px}.ai-coming h2 em{font-style:normal;color:#00F0FF}.ai-coming p{max-width:670px;margin:0 auto 30px;color:#9eaaaa;font-size:16px;line-height:1.75}.ai-coming-badges{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.ai-coming-badges span{padding:11px 16px;border:1px solid #20505a;border-radius:7px;background:#0b1112;color:#00F0FF;font:10px 'DM Mono';letter-spacing:.1em}
+@media(max-width:1000px){.ai-hero{grid-template-columns:1fr;padding-top:65px}.ai-hero-visual{margin-top:10px}.ai-dashboard{transform:none}.ai-dashboard-body{grid-template-columns:110px 1fr}.ai-dash-side:last-child{display:none}.ai-two{grid-template-columns:1fr}.ai-questions{grid-template-columns:1fr 1fr}.ai-product-grid,.ai-journal-ui{grid-template-columns:1fr}.ai-product-side{border-left:0;border-top:1px solid #20292a}.ai-principle{grid-template-columns:1fr;gap:30px}}
+@media(max-width:600px){.ai-hero{padding:50px 6vw 70px;min-height:auto}.ai-hero h1{font-size:52px}.ai-hero .lead{font-size:17px}.ai-hero-actions{align-items:flex-start;flex-direction:column;gap:15px}.ai-dashboard-body{grid-template-columns:1fr}.ai-dash-side:first-child{display:none}.ai-dashboard{border-radius:10px}.ai-dash-main{padding:22px}.ai-section{padding:85px 6vw}.ai-feature{padding:28px;min-height:auto}.ai-feature h3{font-size:32px}.ai-questions{grid-template-columns:1fr}.ai-question{min-height:auto}.ai-product-main{padding:25px}.ai-product-side{padding:20px}.ai-principle{padding:30px}.ai-quote{font-size:22px}.ai-coming{padding:105px 18px}.ai-coming h2{font-size:62px}}
 </style>
 </head>
 <body class="ai-page">
@@ -63,121 +25,33 @@
   <nav><a href="./why-voltdesk.html">Warum VoltDesk</a><a href="./toolstack.html">Toolstack</a><a href="./features.html">Features</a><a href="./how-it-works.html">So funktioniert es</a><a href="./faq.html">FAQ</a><a href="./hilfe.html">Hilfe</a><a href="./index.html#pricing">Preise</a><a href="./withdrawal.html">Widerrufsrecht</a></nav>
   <div class="actions"><a class="btn small" href="https://voltdesk.streamlit.app">Kostenlos testen</a></div>
 </header>
-
 <main>
 <section class="ai-hero">
-  <div class="eyebrow">VOLT DESK AI · MARKET INTELLIGENCE & BEHAVIOURAL ENGINE</div>
-  <h1>Zwei Perspektiven.<br><em>Ein Trading Desk.</em></h1>
-  <p class="lead">VoltDesk verbindet deine eigene Trading-Analyse mit moderner KI: morgens der Blick auf den Markt – später der Blick auf dein eigenes Trading.</p>
-  <div class="ai-badge">POWERED BY OPENAI · COMING SOON</div>
-</section>
-
-<section class="ai-section">
-  <div class="ai-inner">
-    <div class="ai-kicker">DIE ZWEI KI-FUNKTIONEN</div>
-    <h2>Ein Blick nach draußen.<br><em>Ein Blick nach innen.</em></h2>
-    <p class="ai-intro">AI soll den Trader nicht ersetzen. Sie soll Informationen verdichten, Zusammenhänge sichtbar machen und den eigenen Denkprozess erweitern – direkt dort, wo du ohnehin arbeitest: in VoltDesk.</p>
-
-    <div class="ai-duo">
-      <article class="ai-card">
-        <div class="number">01 · MORNING BRIEFING</div>
-        <h3>AI Pre-Market <em>Coach</em></h3>
-        <div class="metaphor">DIE AUSSENSCHAU</div>
-        <p>Ein kompakter KI-Blick auf den ausgewählten Markt. Aktuelle Nachrichten, Catalysts, Ereignisse und Marktbewegungen werden zu einem Morning Briefing verdichtet.</p>
-        <ul>
-          <li>EU · UK · CH · US</li>
-          <li>Ein Briefing pro Account und Tradingtag</li>
-          <li>Auf Wunsch mit persönlicher Watchlist</li>
-          <li>Direkt in VoltDesk – kein Toolwechsel</li>
-        </ul>
-      </article>
-      <article class="ai-card">
-        <div class="number">02 · JOURNAL ANALYST</div>
-        <h3>AI Journal <em>Analyst</em></h3>
-        <div class="metaphor">DIE INNENSCHAU</div>
-        <p>Deine eigenen Trades werden zum Ausgangspunkt einer intelligenten Reflexion. Der Analyst sucht nach Mustern in Strategien, Setups, Ergebnissen und Tradingverhalten.</p>
-        <ul>
-          <li>Analysiert reale Journal- und Tradingdaten</li>
-          <li>Erkennt wiederkehrende Muster</li>
-          <li>Fragt nach dem „Warum“ hinter Ergebnissen</li>
-          <li>Hilft, aus Trades systematisch zu lernen</li>
-        </ul>
-      </article>
-    </div>
+  <div class="ai-hero-copy">
+    <div class="eyebrow">THE NEXT EVOLUTION IN TRADING SUPPORT</div>
+    <h1>Your Trading.<br><em>With an AI Coach.</em></h1>
+    <p class="lead">See what's happening in the market. Understand what's happening in your trading.</p>
+    <p class="sublead">One AI Coach. Two perspectives. Built into VoltDesk — designed to give you more context before you trade and more insight after you trade.</p>
+    <div class="ai-hero-actions"><div class="ai-status"><i></i>COMING SOON · Q2 2027</div><div class="ai-powered">POWERED BY <strong>OpenAI</strong></div></div>
   </div>
+  <div class="ai-hero-visual"><div class="ai-glow"></div><div class="ai-dashboard">
+    <div class="ai-dashboard-top"><span class="brandline">VOLT<span>DESK</span> · AI COACH</span><span class="live">● AI ONLINE</span></div>
+    <div class="ai-dashboard-body">
+      <aside class="ai-dash-side"><div class="ai-dash-label">MARKET</div><div class="ai-region">US <span>⌄</span></div><div class="ai-market-row">S&amp;P 500 <b>+0.8%</b></div><div class="ai-market-row">NASDAQ <b>+1.1%</b></div><div class="ai-market-row">DAX <b>+0.4%</b></div><div class="ai-market-row">FTSE 100 <b>−0.2%</b></div></aside>
+      <div class="ai-dash-main"><div class="ai-dash-label">MORNING BRIEFING · TODAY</div><h3>What matters <em>today?</em></h3><p>Your market context, condensed into the information that deserves your attention before the session starts.</p><div class="ai-news"><div class="ai-news-card"><b>Fed signals slower rate cuts <em>MACRO</em></b><span>MARKET IMPACT · HIGH</span></div><div class="ai-news-card"><b>Tech earnings reshape sector momentum <em>SECTOR</em></b><span>MARKET IMPACT · MEDIUM</span></div><div class="ai-news-card"><b>Volatility elevated in selected names <em>WATCH</em></b><span>RISK · ATTENTION</span></div></div></div>
+      <aside class="ai-dash-side"><div class="ai-dash-label">AI COACH</div><div class="stat"><strong>3</strong><span>Key situations</span></div><div class="stat"><strong>WATCHLIST</strong><span>Personal context</span></div><div class="stat"><strong>RISKS</strong><span>Events &amp; uncertainty</span></div><div class="stat"><strong>JOURNAL</strong><span>Your trading patterns</span></div></aside>
+    </div><div class="ai-brain" aria-hidden="true"></div>
+  </div></div>
 </section>
-
-<section class="ai-section">
-  <div class="ai-inner">
-    <div class="ai-kicker">MORNING BRIEFING</div>
-    <h2>Was passiert heute<br><em>am Markt?</em></h2>
-    <p class="ai-intro">Ein Klick. Ein Briefing. Ein aktueller Blick auf den von dir gewählten Markt. Die KI recherchiert aktuelle Informationen und strukturiert sie für den Daytrading-Kontext.</p>
-
-    <div class="ai-brief">
-      <div class="ai-windowbar"><span>VOLT DESK · AI PRE-MARKET COACH</span><span class="live">● MORNING BRIEFING</span></div>
-      <div class="ai-window">
-        <div>
-          <div class="ai-label">MARKET SNAPSHOT</div>
-          <h3>Heute zählt nicht alles.<br>Nur das Relevante.</h3>
-          <p>Das Briefing verdichtet die aktuelle Informationslage und stellt die Situationen heraus, die für die heutige Session besondere Aufmerksamkeit verdienen.</p>
-          <div class="ai-label" style="margin-top:30px">TOP ATTENTION</div>
-          <div class="ai-attention">
-            <div><b>01 · Unternehmens-Catalyst</b><span>NEWS · MOMENTUM · VOLUME</span></div>
-            <div><b>02 · Marktbewegung</b><span>VOLATILITY · SECTOR CONTEXT</span></div>
-            <div><b>03 · Watchlist Candidate</b><span>RELEVANCE · RISK</span></div>
-          </div>
-        </div>
-        <aside class="ai-side">
-          <div class="ai-label">BRIEFING</div>
-          <div class="stat"><strong>MARKET</strong><span>Ausgewählter Markt</span></div>
-          <div class="stat"><strong>3–5</strong><span>Top Attention Situationen</span></div>
-          <div class="stat"><strong>WATCHLIST</strong><span>Persönliche Werte im Kontext</span></div>
-          <div class="stat"><strong>RISKS</strong><span>Events & Unsicherheiten</span></div>
-        </aside>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="ai-section">
-  <div class="ai-inner">
-    <div class="ai-kicker">JOURNAL ANALYST</div>
-    <h2>Nicht: „Was soll ich tun?“<br><em>Sondern: „Was kann ich lernen?“</em></h2>
-    <p class="ai-intro">Der Journal Analyst betrachtet dein Trading nicht als Signalmaschine. Er hilft dir, deine eigenen Entscheidungen mit Abstand zu betrachten – eher wie ein guter Freund, der die richtigen Fragen stellt.</p>
-
-    <div class="ai-questions">
-      <div class="ai-question"><span>FRAGE 01</span><p>Welche meiner Strategien funktioniert unter welchen Bedingungen am besten?</p></div>
-      <div class="ai-question"><span>FRAGE 02</span><p>Welche Muster erkennst du in meinen Verlusttrades?</p></div>
-      <div class="ai-question"><span>FRAGE 03</span><p>Halte ich meine definierten Trading-Regeln tatsächlich ein?</p></div>
-      <div class="ai-question"><span>FRAGE 04</span><p>Welche Gemeinsamkeiten haben meine besten Trades?</p></div>
-    </div>
-
-    <div class="ai-principle">
-      <div>
-        <h3>AI als Werkzeug.<br>Nicht als Autopilot.</h3>
-        <p>VoltDesk soll keinen Tradingautomaten bauen, der Entscheidungen abnimmt. Die Märkte bleiben unberechenbar. Die Entscheidung und Verantwortung bleiben beim Menschen.</p>
-      </div>
-      <div class="quote">„Die KI erweitert deinen Blick.<br><em>Du entscheidest, was du daraus machst.</em>“</div>
-    </div>
-  </div>
-</section>
-
-<section class="ai-coming">
-  <div class="ai-kicker">VOLT DESK AI</div>
-  <h2>Coming Soon.</h2>
-  <p>Die AI-Funktionen befinden sich im experimentellen Praxistest und werden bis zum VoltDesk Release weiterentwickelt und evaluiert.</p>
-  <div class="date">PLANNED FOR Q2 2027</div>
-</section>
+<section class="ai-section"><div class="ai-inner"><div class="ai-kicker">TWO PERSPECTIVES · ONE AI COACH</div><h2>The world outside.<br><em>The trader inside.</em></h2><p class="ai-intro">The Morning Briefing looks outward: news, events, market context and what could matter today. The AI Journal Analyst looks inward: your trades, moods, setups and recurring patterns. Together they create a different kind of trading support.</p>
+<div class="ai-two">
+<article class="ai-feature"><div class="ai-feature-head"><div class="ai-number">01 · MORNING BRIEFING</div><div class="ai-feature-tag">LOOK OUTSIDE</div></div><h3>Know what's happening<br><em>before you trade.</em></h3><div class="ai-metaphor">THE OUTSIDE VIEW</div><p>Think of it like turning on the TV before the trading day starts — except the briefing is structured around what matters to a trader. Current information becomes a concise market picture.</p><div class="ai-mini-ui"><div class="ai-mini-bar"><span>VOLT DESK · MORNING BRIEFING</span><span>US · TODAY</span></div><div class="ai-mini-content"><div class="ai-mini-title">Today's <span>Market Focus</span></div><div class="ai-mini-grid"><div class="ai-mini-cell"><b>MARKET</b><span>Macro &amp; indices</span></div><div class="ai-mini-cell"><b>CATALYSTS</b><span>News &amp; events</span></div><div class="ai-mini-cell"><b>MOVERS</b><span>Unusual activity</span></div><div class="ai-mini-cell"><b>RISKS</b><span>What to watch</span></div></div><div class="ai-checks"><div class="ai-check">Global market overview</div><div class="ai-check">Key news &amp; events</div><div class="ai-check">What matters for your session</div></div></div></div></article>
+<article class="ai-feature"><div class="ai-feature-head"><div class="ai-number">02 · AI JOURNAL ANALYST</div><div class="ai-feature-tag">LOOK INSIDE</div></div><h3>Understand your trading<br><em>like never before.</em></h3><div class="ai-metaphor">THE INSIDE VIEW</div><p>Your journal becomes a mirror. The AI Analyst can help you explore your setups, results, moods and decisions — like a good trading friend who has seen every trade.</p><div class="ai-mini-ui"><div class="ai-mini-bar"><span>VOLT DESK · JOURNAL ANALYST</span><span>YOUR DATA</span></div><div class="ai-mini-content"><div class="ai-mini-title">Your trading <span>patterns</span></div><div class="ai-mini-grid"><div class="ai-mini-cell"><b>SETUPS</b><span>Breakout · Pullback</span></div><div class="ai-mini-cell"><b>MOOD</b><span>Confidence · Stress</span></div><div class="ai-mini-cell"><b>RESULTS</b><span>Win rate · R-multiple</span></div><div class="ai-mini-cell"><b>BEHAVIOR</b><span>Recurring patterns</span></div></div><div class="ai-insight"><b>AI INSIGHT</b><p>You tend to enter too early after strong news. Waiting for confirmation may improve consistency.</p></div></div></div></article>
+</div><div class="ai-centerline"><span>POWERED BY OPENAI · BUILT INTO VOLTDESK</span></div></div></section>
+<section class="ai-section ai-brief-section"><div class="ai-inner"><div class="ai-kicker">01 · MORNING BRIEFING</div><h2>Start the day<br><em>in context.</em></h2><p class="ai-intro">You choose the region. VoltDesk's AI Coach turns current information into a focused briefing — so you don't have to piece the picture together from ten different sources.</p><div class="ai-product"><div class="ai-product-bar"><span>VOLT DESK AI COACH · <strong>MORNING BRIEFING</strong></span><span>EU · UK · CH · US</span></div><div class="ai-product-grid"><div class="ai-product-main"><div class="ai-dash-label">TODAY'S MARKET BRIEFING</div><h3>Not every headline matters.<br>Know which ones do.</h3><p>The briefing aggregates the current market picture and highlights the situations, events and risks that deserve attention before the session begins.</p><div class="ai-headlines"><div class="ai-headline"><i>01</i><b>Macro catalyst changes the market backdrop</b><span>HIGH</span></div><div class="ai-headline"><i>02</i><b>Sector momentum building around earnings</b><span>MEDIUM</span></div><div class="ai-headline"><i>03</i><b>Elevated volatility on selected names</b><span>WATCH</span></div></div></div><aside class="ai-product-side"><div class="ai-dash-label">BRIEFING AT A GLANCE</div><div class="metric"><b>EU · UK · CH · US</b><span>Select your market region</span></div><div class="metric"><b>CONCISE</b><span>Information, not information overload</span></div><div class="metric"><b>CONTEXT</b><span>News connected to market relevance</span></div><div class="metric"><b>ONE PLACE</b><span>Inside your VoltDesk workflow</span></div></aside></div></div></div></section>
+<section class="ai-section ai-journal"><div class="ai-inner"><div class="ai-kicker">02 · AI JOURNAL ANALYST</div><h2>Your journal knows your trades.<br><em>Now it can help you understand them.</em></h2><p class="ai-intro">The Analyst doesn't tell you what to buy or sell. It helps you investigate the patterns hidden in your own trading data — including setups, performance, moods and recurring behavior.</p><div class="ai-questions"><div class="ai-question"><span>ASK 01</span><p>Which setups work best for me — and under what conditions?</p></div><div class="ai-question"><span>ASK 02</span><p>What patterns keep appearing in my losing trades?</p></div><div class="ai-question"><span>ASK 03</span><p>Does my mood correlate with how I trade?</p></div><div class="ai-question"><span>ASK 04</span><p>What do my best trades have in common?</p></div></div><div class="ai-journal-ui"><div class="ai-journal-card"><div class="ai-dash-label">YOUR TRADING DATA</div><h4>The numbers <em>behind the story.</em></h4><div class="ai-stat-grid"><div class="ai-stat-box"><strong>62%</strong><span>WIN RATE</span></div><div class="ai-stat-box"><strong>+1.4R</strong><span>AVG. R MULTIPLE</span></div><div class="ai-stat-box"><strong>27</strong><span>BREAKOUT TRADES</span></div><div class="ai-stat-box"><strong>8</strong><span>RECURRING PATTERNS</span></div></div></div><div class="ai-journal-card"><div class="ai-dash-label">AI JOURNAL ANALYST</div><h4>From data to <em>insight.</em></h4><div class="ai-insight"><b>PATTERN DETECTED</b><p>Entries made immediately after strong news show a higher frequency of early exits in your journal.</p></div><div class="ai-insight"><b>SETUP OBSERVATION</b><p>Your strongest results appear when the breakout is supported by volume and you wait for confirmation.</p></div><div class="ai-insight"><b>MOOD SIGNAL</b><p>Higher stress scores appear more often after two consecutive losses.</p></div></div></div><div class="ai-principle"><div><h3>AI as a tool.<br>Not an autopilot.</h3><p>VoltDesk AI is designed to support the trader, not replace the trader. The AI can surface context, questions and patterns — but the decision remains yours.</p></div><div class="ai-quote">The goal isn't to tell you what to do.<br><em>It's to help you understand what you do.</em></div></div></div></section>
+<section class="ai-coming"><div class="ai-kicker">VOLT DESK AI COACH</div><h2>Coming <em>Soon.</em></h2><p>Two new AI perspectives for the VoltDesk trader. Market context in the morning. Personal insight from your journal. Planned for the next generation of VoltDesk.</p><div class="ai-coming-badges"><span>PLANNED FOR Q2 2027</span><span>POWERED BY OPENAI</span></div></section>
 </main>
-
-<footer>
-  <span>© <a href="http://www.kaisersoft.global">kaisersoft.ai</a> · <a href="./impressum.html">Impressum</a> · <a href="./agb.html">AGB</a> · <a href="./datenschutz.html">Datenschutz</a></span>
-  <span class="social-links" aria-label="Social Media">
-    <a class="social-link" href="https://x.com/voltdeskapp" target="_blank" rel="noopener noreferrer" aria-label="VoltDesk auf X" title="VoltDesk auf X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817-5.964 6.817H1.682l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231 5.45-6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg></a>
-    <a class="social-link" href="https://www.youtube.com/@VoltDesk" target="_blank" rel="noopener noreferrer" aria-label="VoltDesk auf YouTube" title="VoltDesk auf YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.19a3.01 3.01 0 0 0-2.12-2.13C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.56A3.01 3.01 0 0 0 .5 6.19 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.81 3.01 3.01 0 0 0 2.12 2.13C4.5 20.5 12 20.5 12 20.5s7.5 0 9.38-.56a3.01 3.01 0 0 0 2.12-2.13A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.81ZM9.75 15.02V8.98L15.5 12l-5.75 3.02Z"/></svg></a>
-    <a class="social-link" href="https://www.instagram.com/kaisersoft.ai/" target="_blank" rel="noopener noreferrer" aria-label="kaisersoft.ai auf Instagram" title="kaisersoft.ai auf Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5Zm5.25-3.1a1.1 1.1 0 1 1-1.1 1.1 1.1 0 1 1-1.1-1.1Z"/></svg></a>
-  </span>
-  <span>Professional Trading Intelligence · Paper Trading</span>
-</footer>
+<footer><span>© <a href="http://www.kaisersoft.global">kaisersoft.ai</a> · <a href="./impressum.html">Impressum</a> · <a href="./agb.html">AGB</a> · <a href="./datenschutz.html">Datenschutz</a></span><span class="social-links" aria-label="Social Media"><a class="social-link" href="https://x.com/voltdeskapp" target="_blank" rel="noopener noreferrer" aria-label="VoltDesk auf X" title="VoltDesk auf X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817-5.964 6.817H1.682l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231 5.45-6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg></a><a class="social-link" href="https://www.youtube.com/@VoltDesk" target="_blank" rel="noopener noreferrer" aria-label="VoltDesk auf YouTube" title="VoltDesk auf YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.19a3.01 3.01 0 0 0-2.12-2.13C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.56A3.01 3.01 0 0 0 .5 6.19 31.4 31.4 0 0 0 .5 17.81a3.01 3.01 0 0 0 2.12 2.13C4.5 20.5 12 20.5 12 20.5s7.5 0 9.38-.56a3.01 3.01 0 0 0 2.12-2.13A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.81ZM9.75 15.02V8.98L15.5 12l-5.75 3.02Z"/></svg></a><a class="social-link" href="https://www.instagram.com/kaisersoft.ai/" target="_blank" rel="noopener noreferrer" aria-label="kaisersoft.ai auf Instagram" title="kaisersoft.ai auf Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1 5 5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5Zm5.25-3.1a1.1 1.1 0 1 1-1.1 1.1 1.1 0 0 1-1.1-1.1Z"/></svg></a></span><span>Professional Trading Intelligence · Paper Trading</span></footer>
 </body>
 </html>
