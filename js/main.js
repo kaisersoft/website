@@ -54,13 +54,21 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape')closeImpress
 document.getElementById('loading-logo').addEventListener('click',openImpressum);
 document.getElementById('final-logo').addEventListener('click',openImpressum);
 
+/* Favicon: use the supplied KaiserSoft graphic. */
+const favicon=document.createElement('link');
+favicon.rel='icon';
+favicon.type='image/svg+xml';
+favicon.href='/favicon.svg';
+document.head.appendChild(favicon);
+
 /* Neptune / KaiserChat: same visual position as the top-left planet, reduced to 80% and fully clickable. */
 const neptuneStyle=document.createElement('style');
 neptuneStyle.textContent=`
 #experience::before{width:clamp(240px,24vw,364px)!important;height:clamp(240px,24vw,364px)!important}
 #experience::after{width:clamp(164px,16vw,240px)!important;height:clamp(164px,16vw,240px)!important}
 #neptune-link{position:absolute;z-index:4;top:-72px;left:-78px;width:clamp(240px,24vw,364px);height:clamp(240px,24vw,364px);display:block;cursor:pointer;text-decoration:none;border-radius:50%;outline:none}
-#neptune-link:hover{filter:drop-shadow(0 0 18px rgba(0,229,255,.28))}
+#experience.neptune-hover::before{box-shadow:0 0 28px rgba(44,186,255,.62),0 0 78px rgba(0,111,255,.38),inset -42px -34px 65px rgba(0,0,0,.42),inset 22px 18px 38px rgba(195,248,255,.16)!important;filter:brightness(1.12)}
+#experience.neptune-hover::after{filter:drop-shadow(0 0 14px rgba(0,229,255,.55));opacity:.9!important}
 #neptune-link:focus-visible{outline:1px solid rgba(0,229,255,.55);outline-offset:6px}
 @media(max-width:600px){#experience::before{top:-52px!important;left:-58px!important;width:clamp(188px,46.4vw,264px)!important;height:clamp(188px,46.4vw,264px)!important}#experience::after{top:14px!important;left:14px!important;width:clamp(128px,31.2vw,180px)!important;height:clamp(128px,31.2vw,180px)!important}#neptune-link{top:-52px;left:-58px;width:clamp(188px,46.4vw,264px);height:clamp(188px,46.4vw,264px)}}
 @media(max-height:560px) and (orientation:landscape){#experience::before{top:-48px!important;left:-58px!important;width:232px!important;height:232px!important}#experience::after{top:10px!important;left:10px!important;width:164px!important;height:164px!important}#neptune-link{top:-48px;left:-58px;width:232px;height:232px}}
@@ -74,6 +82,10 @@ neptuneLink.rel='noopener noreferrer';
 neptuneLink.setAttribute('aria-label','KaiserChat öffnen');
 neptuneLink.title='KaiserChat öffnen';
 experience.appendChild(neptuneLink);
+neptuneLink.addEventListener('mouseenter',()=>experience.classList.add('neptune-hover'));
+neptuneLink.addEventListener('mouseleave',()=>experience.classList.remove('neptune-hover'));
+neptuneLink.addEventListener('focus',()=>experience.classList.add('neptune-hover'));
+neptuneLink.addEventListener('blur',()=>experience.classList.remove('neptune-hover'));
 
 function load(now){
   const progress=Math.min(100,(now-start)/duration*100);
