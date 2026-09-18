@@ -8,6 +8,7 @@ on:
       - 'css/**'
       - 'js/**'
       - 'voltdesk-landingpage/**'
+      - 'esolidus/**'
       - '.github/workflows/deploy-voltdesk-landingpage.yml'
   workflow_dispatch:
 
@@ -138,6 +139,7 @@ jobs:
           cp -R css _site/
           cp -R js _site/
           cp -R voltdesk-landingpage _site
+          cp -R esolidus _site
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
