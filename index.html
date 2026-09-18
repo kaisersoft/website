@@ -52,6 +52,48 @@
         <svg class="earth" viewBox="0 0 220 220" role="img" aria-label="Erde"><defs><radialGradient id="earth-body" cx="32%" cy="27%" r="74%"><stop offset="0" stop-color="#c9fbff"/><stop offset=".2" stop-color="#55d8ed"/><stop offset=".48" stop-color="#147ea6"/><stop offset=".78" stop-color="#0a4267"/><stop offset="1" stop-color="#02172d"/></radialGradient><radialGradient id="earth-atmosphere" cx="50%" cy="50%" r="50%"><stop offset="76%" stop-color="#42dfff" stop-opacity="0"/><stop offset="92%" stop-color="#42dfff" stop-opacity=".18"/><stop offset="100%" stop-color="#42dfff" stop-opacity=".7"/></radialGradient><linearGradient id="earth-land" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d7f7c2"/><stop offset=".45" stop-color="#6fbf78"/><stop offset="1" stop-color="#1f684c"/></linearGradient><filter id="earth-glow" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter><clipPath id="earth-clip"><circle cx="110" cy="110" r="61"/></clipPath></defs><circle cx="110" cy="110" r="72" fill="url(#earth-atmosphere)" filter="url(#earth-glow)"/><circle cx="110" cy="110" r="61" fill="url(#earth-body)"/><g clip-path="url(#earth-clip)" opacity=".9"><path d="M74 70 C61 79 62 92 72 97 C80 101 81 110 76 119 C71 129 78 137 88 136 C99 135 105 128 111 120 C116 113 110 106 103 102 C97 98 99 89 94 83 C89 78 81 73 74 70Z" fill="url(#earth-land)"/><path d="M118 65 C127 70 137 70 143 77 C150 84 147 92 155 97 C163 102 160 110 153 113 C145 117 141 124 135 130 C129 136 127 145 119 148 C112 151 106 143 109 136 C112 129 109 123 114 117 C120 110 116 104 110 100 C104 95 106 87 112 83 C117 80 114 71 118 65Z" fill="url(#earth-land)"/><path d="M145 129 C153 126 162 128 166 134 C171 141 165 148 158 148 C151 147 146 142 145 129Z" fill="url(#earth-land)"/><path d="M90 139 C98 137 104 140 105 147 C106 155 100 160 93 158 C86 156 84 146 90 139Z" fill="url(#earth-land)"/><path d="M45 101 Q110 82 176 100" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="6"/><path d="M48 123 Q110 140 173 122" fill="none" stroke="rgba(0,210,255,.16)" stroke-width="5"/></g><ellipse cx="93" cy="87" rx="21" ry="13" fill="rgba(255,255,255,.16)"/></svg>
       </a>
 
+      <!-- Venus: zukünftiges Projekt — noch nicht verlinkt -->
+      <div id="venus-planet" class="venus-planet" aria-label="Venus">
+        <svg class="venus" viewBox="0 0 220 220" role="img" aria-label="Venus">
+          <defs>
+            <radialGradient id="venus-body" cx="34%" cy="26%" r="76%">
+              <stop offset="0" stop-color="#fff0c2"/>
+              <stop offset=".22" stop-color="#e9c47d"/>
+              <stop offset=".48" stop-color="#c08a45"/>
+              <stop offset=".72" stop-color="#87562e"/>
+              <stop offset="1" stop-color="#3f2417"/>
+            </radialGradient>
+            <linearGradient id="venus-clouds" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="rgba(255,239,188,.75)"/>
+              <stop offset=".5" stop-color="rgba(166,105,49,.2)"/>
+              <stop offset="1" stop-color="rgba(67,34,20,.65)"/>
+            </linearGradient>
+            <radialGradient id="venus-atmosphere" cx="50%" cy="50%" r="50%">
+              <stop offset="72%" stop-color="#ffd98b" stop-opacity="0"/>
+              <stop offset="91%" stop-color="#f0b55e" stop-opacity=".16"/>
+              <stop offset="100%" stop-color="#e49a45" stop-opacity=".62"/>
+            </radialGradient>
+            <filter id="venus-glow" x="-70%" y="-70%" width="240%" height="240%">
+              <feGaussianBlur stdDeviation="5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <clipPath id="venus-clip"><circle cx="110" cy="110" r="61"/></clipPath>
+          </defs>
+          <circle cx="110" cy="110" r="72" fill="url(#venus-atmosphere)" filter="url(#venus-glow)"/>
+          <circle cx="110" cy="110" r="61" fill="url(#venus-body)"/>
+          <g clip-path="url(#venus-clip)" opacity=".68">
+            <path d="M45 72 Q110 48 176 70" fill="none" stroke="url(#venus-clouds)" stroke-width="9"/>
+            <path d="M42 91 Q108 67 178 90" fill="none" stroke="#f0cf91" stroke-opacity=".38" stroke-width="7"/>
+            <path d="M40 112 Q110 91 180 112" fill="none" stroke="#8b5b32" stroke-opacity=".5" stroke-width="10"/>
+            <path d="M42 134 Q108 113 178 135" fill="none" stroke="#e1b76d" stroke-opacity=".32" stroke-width="8"/>
+            <path d="M50 154 Q112 132 171 153" fill="none" stroke="#75472a" stroke-opacity=".5" stroke-width="11"/>
+            <path d="M72 45 Q91 77 78 112 Q67 145 91 176" fill="none" stroke="#fff0c0" stroke-opacity=".16" stroke-width="8"/>
+            <path d="M132 43 Q113 75 127 109 Q142 142 122 178" fill="none" stroke="#4c2a1b" stroke-opacity=".32" stroke-width="10"/>
+          </g>
+          <ellipse cx="91" cy="84" rx="21" ry="13" fill="rgba(255,255,255,.15)"/>
+        </svg>
+      </div>
+
       <div class="final-center"><div class="final-stack"><svg id="final-logo" class="final-mark" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Kaisersoft AI Logo"><use href="#kaiseroft-logo-shape"></use></svg><div class="final-name">kaisersoft.ai</div><div class="final-message">Loading complete. Welcome on board.</div></div></div>
       <div class="social"><a class="instagram" href="https://www.instagram.com/kaisersoft.ai" target="_blank" rel="noopener noreferrer" aria-label="Kaisersoft AI auf Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"></rect><circle cx="12" cy="12" r="4.15"></circle><circle cx="17.55" cy="6.55" r="1" fill="currentColor" stroke="none"></circle></svg></a></div>
       <button class="saturn-impressum" id="open-impressum" type="button" aria-label="Impressum öffnen" title="Impressum">
