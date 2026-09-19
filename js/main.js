@@ -51,8 +51,34 @@ document.getElementById('open-impressum').addEventListener('click',openImpressum
 document.getElementById('close-impressum').addEventListener('click',closeImpressum);
 modal.addEventListener('click',event=>{if(event.target===modal)closeImpressum();});
 document.addEventListener('keydown',event=>{if(event.key==='Escape')closeImpressum();});
-document.getElementById('loading-logo').addEventListener('click',openImpressum);
-document.getElementById('final-logo').addEventListener('click',openImpressum);
+const intro=document.getElementById('kaisersoft-intro');
+const introVideo=document.getElementById('kaisersoft-video');
+const finalLogo=document.getElementById('final-logo');
+
+function closeIntro(){
+  intro.classList.remove('playing');
+  intro.setAttribute('aria-hidden','true');
+  introVideo.pause();
+  introVideo.currentTime=0;
+}
+function playKaisersoftIntro(){
+  if(!intro || !introVideo) return;
+  intro.classList.remove('playing');
+  introVideo.pause();
+  introVideo.currentTime=0;
+  intro.setAttribute('aria-hidden','false');
+  requestAnimationFrame(()=>{
+    intro.classList.add('playing');
+    const playPromise=introVideo.play();
+    if(playPromise) playPromise.catch(closeIntro);
+  });
+}
+finalLogo.addEventListener('click',playKaisersoftIntro);
+introVideo.addEventListener('ended',closeIntro);
+introVideo.addEventListener('error',closeIntro);
+document.addEventListener('keydown',event=>{
+  if(event.key==='Escape' && intro.classList.contains('playing')) closeIntro();
+});
 
 /* Favicon: use the supplied KaiserSoft graphic. */
 const favicon=document.createElement('link');
