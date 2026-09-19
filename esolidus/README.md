@@ -2,20 +2,20 @@
 
 One-page project site for the Kaisersoft eSOLIDUS project.
 
-## Current positioning
+## Current status
 
-- Genesis planned for 2026
-- Community phase planned for 2027
+- Genesis launched on Solana Mainnet: 19 September 2026
+- Community phase: 2027
 - Long-term horizon: 2032
-- Solana
+- Blockchain: Solana
 - Symbol: ESOL
 - Genesis supply: 100,000,000,000 ESOL
-- 9 decimals
-- Token not yet launched
+- Decimals: 2
+- Mint address: Eo3CXsD4LzkrYsxu6rzmyMxkegqJAKoLgXXo5kCwFYM9
 
-The page intentionally does not publish a mint address or make price/return promises.
+The mint address is published on the project site and links to Solscan for on-chain verification.
 
-The coin graphic is currently a lightweight CSS/HTML 3D mockup so the site can be reviewed before the final portrait and coin artwork assets are integrated.
+The coin artwork is integrated as the final front and reverse assets used by the page.
 
 Expected GitHub Pages path:
 https://kaisersoft.github.io/website/esolidus/
