@@ -94,6 +94,40 @@
         </svg>
       </a>
 
+      <!-- Pluto: small companion planet -->
+      <div id="pluto-planet" class="pluto-planet" aria-hidden="true">
+        <svg class="pluto" viewBox="0 0 140 140" role="img" aria-label="Pluto">
+          <defs>
+            <radialGradient id="pluto-body" cx="32%" cy="27%" r="76%">
+              <stop offset="0" stop-color="#e9ddd1"/>
+              <stop offset=".28" stop-color="#b8a79a"/>
+              <stop offset=".58" stop-color="#806f68"/>
+              <stop offset=".82" stop-color="#51484a"/>
+              <stop offset="1" stop-color="#29262c"/>
+            </radialGradient>
+            <radialGradient id="pluto-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="70%" stop-color="#b8d0df" stop-opacity="0"/>
+              <stop offset="94%" stop-color="#9eb8ca" stop-opacity=".12"/>
+              <stop offset="100%" stop-color="#8096a7" stop-opacity=".38"/>
+            </radialGradient>
+            <filter id="pluto-soft-glow" x="-70%" y="-70%" width="240%" height="240%">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <clipPath id="pluto-clip"><circle cx="70" cy="70" r="38"/></clipPath>
+          </defs>
+          <circle cx="70" cy="70" r="47" fill="url(#pluto-glow)" filter="url(#pluto-soft-glow)"/>
+          <circle cx="70" cy="70" r="38" fill="url(#pluto-body)"/>
+          <g clip-path="url(#pluto-clip)" opacity=".62">
+            <path d="M30 60 Q70 48 110 60" fill="none" stroke="#d9ccc0" stroke-opacity=".32" stroke-width="7"/>
+            <path d="M28 82 Q68 68 112 82" fill="none" stroke="#493f42" stroke-opacity=".55" stroke-width="9"/>
+            <path d="M43 40 Q60 57 51 76 Q43 94 61 105" fill="none" stroke="#d8c7ba" stroke-opacity=".25" stroke-width="8"/>
+            <path d="M83 36 Q72 56 84 72 Q96 89 81 107" fill="none" stroke="#332e34" stroke-opacity=".38" stroke-width="10"/>
+          </g>
+          <ellipse cx="57" cy="53" rx="12" ry="7" fill="rgba(255,255,255,.12)"/>
+        </svg>
+      </div>
+
       <div class="final-center"><div class="final-stack"><svg id="final-logo" class="final-mark" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Kaisersoft AI Logo"><use href="#kaiseroft-logo-shape"></use></svg><div class="final-name">kaisersoft.ai</div><div class="final-message">Loading complete. Welcome on board.</div></div></div>
       <div id="kaisersoft-intro" class="kaisersoft-intro" aria-hidden="true"><div class="kaisersoft-flash"></div><div class="kaisersoft-video-wrap"><video id="kaisersoft-video" playsinline preload="auto"><source src="https://raw.githubusercontent.com/kaisersoft/website/main/assets/kaisersoft-intro.mp4" type="video/mp4"></video></div></div>
       <div class="social"><a class="instagram" href="https://www.instagram.com/kaisersoft.ai" target="_blank" rel="noopener noreferrer" aria-label="Kaisersoft AI auf Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"></rect><circle cx="12" cy="12" r="4.15"></circle><circle cx="17.55" cy="6.55" r="1" fill="currentColor" stroke="none"></circle></svg></a></div>
