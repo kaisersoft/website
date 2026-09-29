@@ -94,6 +94,44 @@
         </svg>
       </a>
 
+      <!-- Mercury: KaiserPay -->
+      <a id="mercury-planet" class="mercury-planet" href="https://kaiserpay.whop.site/" aria-label="KaiserPay öffnen" title="KaiserPay öffnen">
+        <svg class="mercury" viewBox="0 0 180 180" role="img" aria-label="Merkur">
+          <defs>
+            <radialGradient id="mercury-body" cx="32%" cy="27%" r="76%">
+              <stop offset="0" stop-color="#e8edf0"/>
+              <stop offset=".22" stop-color="#b9c1c6"/>
+              <stop offset=".48" stop-color="#858e94"/>
+              <stop offset=".72" stop-color="#596168"/>
+              <stop offset="1" stop-color="#292f34"/>
+            </radialGradient>
+            <radialGradient id="mercury-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="72%" stop-color="#75dfff" stop-opacity="0"/>
+              <stop offset="92%" stop-color="#35cfff" stop-opacity=".12"/>
+              <stop offset="100%" stop-color="#00bfff" stop-opacity=".48"/>
+            </radialGradient>
+            <filter id="mercury-soft-glow" x="-80%" y="-80%" width="260%" height="260%">
+              <feGaussianBlur stdDeviation="4" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <clipPath id="mercury-clip"><circle cx="90" cy="90" r="39"/></clipPath>
+          </defs>
+          <circle cx="90" cy="90" r="49" fill="url(#mercury-glow)" filter="url(#mercury-soft-glow)"/>
+          <circle cx="90" cy="90" r="39" fill="url(#mercury-body)"/>
+          <g clip-path="url(#mercury-clip)" opacity=".7">
+            <circle cx="76" cy="73" r="7" fill="#4d565d" opacity=".72"/>
+            <circle cx="104" cy="68" r="4" fill="#d9e0e3" opacity=".42"/>
+            <circle cx="113" cy="96" r="9" fill="#4a535a" opacity=".62"/>
+            <circle cx="72" cy="106" r="5" fill="#d5dde1" opacity=".32"/>
+            <circle cx="93" cy="119" r="6" fill="#454e55" opacity=".58"/>
+            <circle cx="52" cy="91" r="4" fill="#3e474d" opacity=".65"/>
+            <path d="M55 61 Q90 48 125 61" fill="none" stroke="#f3f7f8" stroke-opacity=".18" stroke-width="5"/>
+            <path d="M50 111 Q90 124 130 111" fill="none" stroke="#1f272c" stroke-opacity=".3" stroke-width="6"/>
+          </g>
+          <ellipse cx="76" cy="67" rx="13" ry="8" fill="rgba(255,255,255,.18)"/>
+        </svg>
+      </a>
+
       <!-- Pluto: small companion planet -->
       <div id="pluto-planet" class="pluto-planet" aria-hidden="true">
         <svg class="pluto" viewBox="0 0 140 140" role="img" aria-label="Pluto">
