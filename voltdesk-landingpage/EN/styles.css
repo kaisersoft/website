@@ -1,3 +1,5 @@
 @import url('../styles.css');
 /* English VoltDesk landing page overrides */
 body:has(.nav)::before{content:'VOLT DESK BETA  ·  Currently in beta testing  ·  Expected release: February 1, 2027';}
+
+.lang-switch{font-size:1.05rem;line-height:1;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;opacity:.85;transition:opacity .2s ease,transform .2s ease}.lang-switch:hover{opacity:1;transform:translateY(-1px)}
