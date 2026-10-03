@@ -91,6 +91,43 @@
         </svg>
       </div>
 
+      <!-- Sun: distant, flickering companion below the Moon -->
+      <div id="sun-planet" class="sun-planet" aria-hidden="true">
+        <svg class="sun" viewBox="0 0 160 160" role="img" aria-label="Sonne">
+          <defs>
+            <radialGradient id="sun-core" cx="35%" cy="30%" r="72%">
+              <stop offset="0" stop-color="#fff9c7"/>
+              <stop offset=".22" stop-color="#ffe78b"/>
+              <stop offset=".52" stop-color="#ffbf45"/>
+              <stop offset=".78" stop-color="#f58a24"/>
+              <stop offset="1" stop-color="#a94712"/>
+            </radialGradient>
+            <radialGradient id="sun-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="48%" stop-color="#ffd66b" stop-opacity=".08"/>
+              <stop offset="76%" stop-color="#ffb33d" stop-opacity=".22"/>
+              <stop offset="100%" stop-color="#ff8a20" stop-opacity=".58"/>
+            </radialGradient>
+            <filter id="sun-glow-filter" x="-90%" y="-90%" width="280%" height="280%">
+              <feGaussianBlur stdDeviation="6" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <clipPath id="sun-clip"><circle cx="80" cy="80" r="30"/></clipPath>
+          </defs>
+          <g class="sun-rays" opacity=".72">
+            <path d="M80 8 L80 24 M80 136 L80 152 M8 80 L24 80 M136 80 L152 80 M29 29 L41 41 M119 119 L131 131 M131 29 L119 41 M41 119 L29 131"
+              stroke="#ffd86b" stroke-width="4" stroke-linecap="round"/>
+          </g>
+          <circle cx="80" cy="80" r="48" fill="url(#sun-glow)" filter="url(#sun-glow-filter)"/>
+          <circle cx="80" cy="80" r="30" fill="url(#sun-core)"/>
+          <g clip-path="url(#sun-clip)" opacity=".5">
+            <path d="M48 69 Q80 57 112 69" fill="none" stroke="#fff7b9" stroke-width="4"/>
+            <path d="M48 87 Q80 75 112 87" fill="none" stroke="#f18a25" stroke-opacity=".58" stroke-width="5"/>
+            <path d="M58 50 Q74 67 65 84 Q58 99 75 111" fill="none" stroke="#fff0a2" stroke-opacity=".28" stroke-width="5"/>
+          </g>
+          <ellipse cx="70" cy="68" rx="10" ry="6" fill="rgba(255,255,255,.22)"/>
+        </svg>
+      </div>
+
       <!-- Venus: eSOLIDUS -->
       <a id="venus-planet" class="venus-planet" href="./esolidus/" aria-label="eSOLIDUS öffnen" title="eSOLIDUS öffnen">
         <svg class="venus" viewBox="0 0 220 220" role="img" aria-label="Venus">
