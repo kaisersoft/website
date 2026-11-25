@@ -34,6 +34,40 @@
     <section id="experience" aria-label="Kaisersoft.ai">
       <canvas id="fireflies"></canvas>
 
+      <!-- Neutron star: pulsar, Pluto-sized, above-left of Uranus -->
+      <div id="neutron-star" aria-hidden="true">
+        <svg viewBox="0 0 100 100" role="presentation">
+          <defs>
+            <radialGradient id="neutron-core" cx="36%" cy="32%" r="68%">
+              <stop offset="0" stop-color="#ffffff"/>
+              <stop offset=".28" stop-color="#efffff"/>
+              <stop offset=".58" stop-color="#8beaff"/>
+              <stop offset=".82" stop-color="#36a9ff"/>
+              <stop offset="1" stop-color="#1762c7"/>
+            </radialGradient>
+            <radialGradient id="neutron-halo">
+              <stop offset="0" stop-color="#a8f5ff" stop-opacity=".42"/>
+              <stop offset=".42" stop-color="#4bcaff" stop-opacity=".18"/>
+              <stop offset="1" stop-color="#168aff" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="neutron-glow" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="4" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <circle class="neutron-halo" cx="50" cy="50" r="48" fill="url(#neutron-halo)"/>
+          <g class="neutron-beams">
+            <path d="M50 50 L44 2 Q50 -3 56 2 Z" fill="#a9f5ff" opacity=".72"/>
+            <path d="M50 50 L44 98 Q50 103 56 98 Z" fill="#a9f5ff" opacity=".72"/>
+            <path d="M50 50 L47 7 Q50 4 53 7 Z" fill="#ffffff" opacity=".58"/>
+            <path d="M50 50 L47 93 Q50 96 53 93 Z" fill="#ffffff" opacity=".58"/>
+          </g>
+          <circle class="neutron-corona" cx="50" cy="50" r="22" fill="none" stroke="#83eaff" stroke-width="1.2" opacity=".7"/>
+          <circle class="neutron-core" cx="50" cy="50" r="10" fill="url(#neutron-core)" filter="url(#neutron-glow)"/>
+          <circle cx="46.5" cy="46.5" r="2.2" fill="#fff" opacity=".95"/>
+        </svg>
+      </div>
+
       <!-- Uranus: VoltDesk -->
       <a id="saturn-link" class="saturn-link" href="./voltdesk-landingpage/" aria-label="VoltDesk öffnen" title="VoltDesk öffnen">
         <svg class="saturn" viewBox="0 0 320 240" role="img" aria-label="Uranus">
