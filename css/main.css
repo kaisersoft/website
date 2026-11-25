@@ -36,17 +36,15 @@
 @media(max-width:600px){.kaisersoft-video-wrap{width:min(88vw,512px);max-height:82vh}.kaisersoft-video-wrap video{max-height:82vh}}
 @media(prefers-reduced-motion:reduce){.kaisersoft-intro.playing .kaisersoft-flash,.kaisersoft-intro.playing .kaisersoft-video-wrap{animation:none;opacity:1}.kaisersoft-intro{transition:none}}
 
-/* Neutron star / pulsar — Pluto-sized, positioned above-left of Uranus */
-#neutron-star{position:absolute;z-index:16;top:clamp(76px,11vh,126px);right:clamp(130px,17vw,260px);width:clamp(42px,3.6vw,58px);height:clamp(42px,3.6vw,58px);pointer-events:none;filter:drop-shadow(0 0 7px rgba(100,220,255,.35))}
+/* Neutron star / pulsar — Pluto-sized sphere, shifted farther left of Uranus */
+#neutron-star{position:absolute;z-index:16;top:clamp(76px,11vh,126px);right:clamp(260px,29vw,430px);width:clamp(42px,3.6vw,58px);height:clamp(42px,3.6vw,58px);pointer-events:none;filter:drop-shadow(0 0 8px rgba(100,220,255,.42))}
 #neutron-star svg{display:block;width:100%;height:100%;overflow:visible}
-#neutron-star .neutron-beams{transform-origin:50px 50px;animation:neutron-rotate 8s linear infinite}
-#neutron-star .neutron-halo{transform-origin:50px 50px;animation:neutron-halo-pulse 1.55s ease-in-out infinite}
-#neutron-star .neutron-core{transform-origin:50px 50px;animation:neutron-core-pulse 1.05s ease-in-out infinite}
-#neutron-star .neutron-corona{transform-origin:50px 50px;animation:neutron-corona-pulse 1.05s ease-in-out infinite}
-@keyframes neutron-rotate{to{transform:rotate(360deg)}}
-@keyframes neutron-halo-pulse{0%,100%{opacity:.45;transform:scale(.82)}50%{opacity:1;transform:scale(1.08)}}
-@keyframes neutron-core-pulse{0%,100%{transform:scale(.88);filter:brightness(.92)}50%{transform:scale(1.13);filter:brightness(1.35)}}
-@keyframes neutron-corona-pulse{0%,100%{opacity:.35;transform:scale(.82)}50%{opacity:.95;transform:scale(1.22)}}
-@media(max-width:600px){#neutron-star{top:24px;right:clamp(78px,20vw,120px);width:40px;height:40px}}
-@media(max-height:560px) and (orientation:landscape){#neutron-star{top:20px;right:clamp(105px,16vw,180px);width:36px;height:36px}}
-@media(prefers-reduced-motion:reduce){#neutron-star .neutron-beams,#neutron-star .neutron-halo,#neutron-star .neutron-core,#neutron-star .neutron-corona{animation:none}#neutron-star .neutron-halo{opacity:.75}}
+#neutron-star .neutron-atmosphere{transform-origin:50px 50px;animation:neutron-atmosphere-pulse 1.35s ease-in-out infinite}
+#neutron-star .neutron-aura{transform-origin:50px 50px;animation:neutron-aura-pulse 1.35s ease-in-out infinite}
+#neutron-star .neutron-sphere{transform-origin:50px 50px;animation:neutron-light-pulse 1.35s ease-in-out infinite}
+@keyframes neutron-atmosphere-pulse{0%,100%{opacity:.48;transform:scale(.84)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes neutron-aura-pulse{0%,100%{opacity:.22;stroke-width:1.2;transform:scale(.9)}50%{opacity:.9;stroke-width:2.2;transform:scale(1.12)}}
+@keyframes neutron-light-pulse{0%,100%{filter:brightness(.88);transform:scale(.97)}50%{filter:brightness(1.42);transform:scale(1.035)}}
+@media(max-width:600px){#neutron-star{top:24px;right:clamp(150px,38vw,205px);width:40px;height:40px}}
+@media(max-height:560px) and (orientation:landscape){#neutron-star{top:20px;right:clamp(220px,27vw,300px);width:36px;height:36px}}
+@media(prefers-reduced-motion:reduce){#neutron-star .neutron-atmosphere,#neutron-star .neutron-aura,#neutron-star .neutron-sphere{animation:none}#neutron-star .neutron-atmosphere{opacity:.8}}
